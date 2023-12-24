@@ -8,23 +8,38 @@ const user = new User()
 
 //wallets keys saved in config.js include config.js in .gitignore
 const loadWallets = async () => {
-    WALLETS.forEach(wallet => {
-        user.addWallet(WALLETS.ID, WALLETS.ADMIN_KEY, WALLETS.INV_KEY, WALLETS.WALLET_NAME)
-    })
+    for (let i = 0; i < WALLETS.length; i++) {
+        await user.addWallet(WALLETS[i].ID, WALLETS[i].ADMIN_KEY, WALLETS[i].INV_KEY, WALLETS[i].WALLET_NAME)
+        await user.wallets[i].initialize()
+   }
 }
 
+
 //load wallet to user.wallets
-loadWallets()
+await loadWallets()
 
 //set default
-user.setCurrentWallet(0)
+await user.setCurrentWallet(0)
 
 //ballance of selected wallet
-const balance = await user.currentWallet.getBalance()
+const balance = await user.currentWallet.getBalance().then(total => {
+    return total
+})
+console.log('balance', balance)
+
+//btc usd price
 const btcUsdPrice = await user.getBtcUsdPrice()
+
 const wallet = await user.currentWallet.wallet_name
-const sumBalances = await user.sumBalances()
+const sumBalances = await user.sumBalances().then(balance => {
+    return balance
+})
 
-console.log(`user: ${user.currentWallet.wallet_name}`)
+console.log('user:', user)
 
-console.log(`${wallet}: ${balance}sats, BTC/usd$${btcUsdPrice} Total: $${sumBalances}`)
+
+user.sumBalances().then(total => {
+    console.log('Total', total)
+})
+
+console.log(`${wallet}: BTC/usd$${btcUsdPrice} Total: $${sumBalances}`)

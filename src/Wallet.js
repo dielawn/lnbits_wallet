@@ -11,7 +11,10 @@ export class Wallet {
         this.admin_key = admKey
         this.inv_rd_key = invKey
         this.wallet_name = walletName
-        this.balance = this.getBalance()
+        this.balance = null
+    }
+    initialize = async () => {
+        this.balance = await this.getBalance()
     }   
     getBalance = async () => {
         try {

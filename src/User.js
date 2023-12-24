@@ -7,7 +7,7 @@ export class User {
         this.currentWallet = null
     }
     //add a new key set
-    addWallet(id, admKey, invKey, walletName) {
+    addWallet = async (id, admKey, invKey, walletName) => {
         const wlt = new Wallet()
         wlt.wallet_id = id
         wlt.admin_key = admKey
