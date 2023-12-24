@@ -485,37 +485,61 @@ var wallet = await user.currentWallet.wallet_name;
 console.log('Current wallet name:', wallet);
 
 // sum balance of each wallet
-var totalBalance = await user.sumBalances().then(function (total) {
-  return total;
-});
-user.totalBalance = totalBalance;
-console.log(user.totalBalance);
+var displayWalletsSum = /*#__PURE__*/function () {
+  var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
+    var containerDiv, totalDiv, totalBalance, balanceEl;
+    return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+      while (1) switch (_context3.prev = _context3.next) {
+        case 0:
+          containerDiv = document.getElementById('container');
+          totalDiv = document.createElement('div');
+          _context3.next = 4;
+          return user.sumBalances().then(function (total) {
+            return total;
+          });
+        case 4:
+          totalBalance = _context3.sent;
+          user.totalBalance = totalBalance;
+          balanceEl = document.createElement('h3');
+          balanceEl.innerHTML = "Total: ".concat(totalBalance, "sats");
+          totalDiv.appendChild(balanceEl);
+          containerDiv.appendChild(totalDiv);
+        case 10:
+        case "end":
+          return _context3.stop();
+      }
+    }, _callee3);
+  }));
+  return function displayWalletsSum() {
+    return _ref3.apply(this, arguments);
+  };
+}();
 
 //pseudo DOM stuff
 
 //display balance and name of each wallet
 var balanceOfEach = /*#__PURE__*/function () {
-  var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
+  var _ref4 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5() {
     var containerDiv;
-    return _regeneratorRuntime().wrap(function _callee4$(_context4) {
-      while (1) switch (_context4.prev = _context4.next) {
+    return _regeneratorRuntime().wrap(function _callee5$(_context5) {
+      while (1) switch (_context5.prev = _context5.next) {
         case 0:
           containerDiv = document.getElementById('container');
           user.wallets.forEach(function (wallet) {
             //clickable wallet cards to set wallet keys
             var infoDiv = document.createElement('div');
-            infoDiv.addEventListener('click', /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
-              return _regeneratorRuntime().wrap(function _callee3$(_context3) {
-                while (1) switch (_context3.prev = _context3.next) {
+            infoDiv.addEventListener('click', /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
+              return _regeneratorRuntime().wrap(function _callee4$(_context4) {
+                while (1) switch (_context4.prev = _context4.next) {
                   case 0:
                     user.currentWallet = wallet;
-                    _context3.next = 3;
+                    _context4.next = 3;
                     return displayTxHistory();
                   case 3:
                   case "end":
-                    return _context3.stop();
+                    return _context4.stop();
                 }
-              }, _callee3);
+              }, _callee4);
             })));
             //wallet names and balances
             var walletInfo = document.createElement('h3');
@@ -525,32 +549,32 @@ var balanceOfEach = /*#__PURE__*/function () {
           });
         case 2:
         case "end":
-          return _context4.stop();
+          return _context5.stop();
       }
-    }, _callee4);
+    }, _callee5);
   }));
   return function balanceOfEach() {
-    return _ref3.apply(this, arguments);
+    return _ref4.apply(this, arguments);
   };
 }();
 
 //display tx history in expandable window 
 var displayTxHistory = /*#__PURE__*/function () {
-  var _ref5 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6() {
+  var _ref6 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee7() {
     var containerDiv, transactions;
-    return _regeneratorRuntime().wrap(function _callee6$(_context6) {
-      while (1) switch (_context6.prev = _context6.next) {
+    return _regeneratorRuntime().wrap(function _callee7$(_context7) {
+      while (1) switch (_context7.prev = _context7.next) {
         case 0:
           containerDiv = document.getElementById('container');
-          _context6.next = 3;
+          _context7.next = 3;
           return user.currentWallet.getTxHistory();
         case 3:
-          transactions = _context6.sent;
+          transactions = _context7.sent;
           transactions.forEach( /*#__PURE__*/function () {
-            var _ref6 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5(tx) {
+            var _ref7 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6(tx) {
               var txDiv, amountEl, feeEl, memoEl, bolt11El, hash, dateTimeEl, expiryEl;
-              return _regeneratorRuntime().wrap(function _callee5$(_context5) {
-                while (1) switch (_context5.prev = _context5.next) {
+              return _regeneratorRuntime().wrap(function _callee6$(_context6) {
+                while (1) switch (_context6.prev = _context6.next) {
                   case 0:
                     txDiv = document.createElement('div');
                     txDiv.classList.add('txDiv');
@@ -564,15 +588,15 @@ var displayTxHistory = /*#__PURE__*/function () {
                     hash = tx.bolt11;
                     bolt11El.innerHTML = "".concat(abrvHash(hash, 11));
                     dateTimeEl = document.createElement('p');
-                    _context5.next = 14;
+                    _context6.next = 14;
                     return handleDateCodes(tx.time);
                   case 14:
-                    dateTimeEl.innerHTML = _context5.sent;
+                    dateTimeEl.innerHTML = _context6.sent;
                     expiryEl = document.createElement('p');
-                    _context5.next = 18;
+                    _context6.next = 18;
                     return handleDateCodes(tx.expiry);
                   case 18:
-                    expiryEl.innerHTML = _context5.sent;
+                    expiryEl.innerHTML = _context6.sent;
                     txDiv.appendChild(amountEl);
                     txDiv.appendChild(feeEl);
                     txDiv.appendChild(memoEl);
@@ -582,104 +606,332 @@ var displayTxHistory = /*#__PURE__*/function () {
                     containerDiv.appendChild(txDiv);
                   case 26:
                   case "end":
-                    return _context5.stop();
+                    return _context6.stop();
                 }
-              }, _callee5);
+              }, _callee6);
             }));
             return function (_x) {
-              return _ref6.apply(this, arguments);
+              return _ref7.apply(this, arguments);
             };
           }());
         case 5:
         case "end":
-          return _context6.stop();
+          return _context7.stop();
       }
-    }, _callee6);
+    }, _callee7);
   }));
   return function displayTxHistory() {
-    return _ref5.apply(this, arguments);
+    return _ref6.apply(this, arguments);
   };
 }();
+//filter data
 //download to csv
+
+//invoice popup:
+var displayInvoice = /*#__PURE__*/function () {
+  var _ref8 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee8(invoice) {
+    var prevInvoice, containerDiv, invoiceDiv, invoiceData, amountEl, dateTimeEl, qrEl;
+    return _regeneratorRuntime().wrap(function _callee8$(_context8) {
+      while (1) switch (_context8.prev = _context8.next) {
+        case 0:
+          prevInvoice = document.querySelectorAll('.invoiceDiv');
+          if (prevInvoice) {
+            prevInvoice.remove();
+          }
+          containerDiv = document.getElementById('container');
+          invoiceDiv = document.createElement('div');
+          invoiceDiv.id = 'invoiceDiv';
+          invoiceDiv.classList.add('invoiceDiv');
+          //decodes
+          _context8.next = 8;
+          return user.currentWallet.decodeInvoice(invoice);
+        case 8:
+          invoiceData = _context8.sent;
+          //displays invoice amount
+          amountEl = document.createElement('p');
+          amountEl.innerHTML = "".concat(invoiceData.amount, "sats");
+          //displays invoice creation time
+          dateTimeEl = document.createElement('p');
+          _context8.next = 14;
+          return handleDateCodes(invoiceData.time);
+        case 14:
+          dateTimeEl.innerHTML = _context8.sent;
+          //displays unique qr code for air gaped payments
+          qrEl = document.createElement('div');
+          _context8.next = 18;
+          return user.currentWallet.getQrCode(invoice);
+        case 18:
+          qrEl.innerHTML = _context8.sent;
+          _context8.next = 21;
+          return appendClsBtn('invoiceDiv');
+        case 21:
+          invoiceDiv.appendChild(amountEl);
+          invoiceDiv.appendChild(dateTimeEl);
+          invoiceDiv.appendChild(qrEl);
+          containerDiv.appendChild(invoiceDiv);
+        case 25:
+        case "end":
+          return _context8.stop();
+      }
+    }, _callee8);
+  }));
+  return function displayInvoice(_x2) {
+    return _ref8.apply(this, arguments);
+  };
+}();
+
+//closetBtn for pop ups
+var appendClsBtn = /*#__PURE__*/function () {
+  var _ref9 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee10(elIdToRemove) {
+    var toBeRemoved, clsBtn;
+    return _regeneratorRuntime().wrap(function _callee10$(_context10) {
+      while (1) switch (_context10.prev = _context10.next) {
+        case 0:
+          toBeRemoved = document.getElementById(elIdToRemove);
+          clsBtn = document.createElement('button');
+          clsBtn.classList.add('clsBtn');
+          clsBtn.textContent = 'X';
+          clsBtn.addEventListener('click', /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee9() {
+            return _regeneratorRuntime().wrap(function _callee9$(_context9) {
+              while (1) switch (_context9.prev = _context9.next) {
+                case 0:
+                  toBeRemoved.remove();
+                case 1:
+                case "end":
+                  return _context9.stop();
+              }
+            }, _callee9);
+          })));
+          toBeRemoved.appendChild(clsBtn);
+        case 6:
+        case "end":
+          return _context10.stop();
+      }
+    }, _callee10);
+  }));
+  return function appendClsBtn(_x3) {
+    return _ref9.apply(this, arguments);
+  };
+}();
 
 //make hash display shorter
 var abrvHash = function abrvHash(hash, startEnd) {
   return "".concat(hash.substring(0, startEnd), "...").concat(hash.substring(hash.length - startEnd, hash.length));
 };
 var handleDateCodes = /*#__PURE__*/function () {
-  var _ref7 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee7(time) {
+  var _ref11 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee11(time) {
     var fmtdTime, fmtdDate;
-    return _regeneratorRuntime().wrap(function _callee7$(_context7) {
-      while (1) switch (_context7.prev = _context7.next) {
+    return _regeneratorRuntime().wrap(function _callee11$(_context11) {
+      while (1) switch (_context11.prev = _context11.next) {
         case 0:
           time = time * 1000;
           fmtdTime = new Date(time).toLocaleTimeString();
           fmtdDate = new Date(time).toLocaleDateString();
-          return _context7.abrupt("return", "".concat(fmtdTime, "<br>").concat(fmtdDate));
+          return _context11.abrupt("return", "".concat(fmtdTime, "<br>").concat(fmtdDate));
         case 4:
         case "end":
-          return _context7.stop();
+          return _context11.stop();
       }
-    }, _callee7);
+    }, _callee11);
   }));
-  return function handleDateCodes(_x2) {
-    return _ref7.apply(this, arguments);
+  return function handleDateCodes(_x4) {
+    return _ref11.apply(this, arguments);
   };
 }();
-
-//invoice popup:
-var displayInvoice = /*#__PURE__*/function () {
-  var _ref8 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee8(invoice) {
-    var containerDiv, invoiceDiv, invoiceData, amountEl, dateTimeEl, time, fmtdTime, fmtdDate, qrCode;
-    return _regeneratorRuntime().wrap(function _callee8$(_context8) {
-      while (1) switch (_context8.prev = _context8.next) {
+var copyToClipBrd = /*#__PURE__*/function () {
+  var _ref12 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee12(text) {
+    return _regeneratorRuntime().wrap(function _callee12$(_context12) {
+      while (1) switch (_context12.prev = _context12.next) {
+        case 0:
+          if (!navigator.clipboard) {
+            _context12.next = 5;
+            break;
+          }
+          _context12.next = 3;
+          return navigator.clipboard.writeText(text).then(function () {
+            return 'Copied to clipboard!';
+          })["catch"](function () {
+            return 'Unable to copy to clipboard';
+          });
+        case 3:
+          _context12.next = 6;
+          break;
+        case 5:
+          return _context12.abrupt("return", 'Clipboard API not supported');
+        case 6:
+        case "end":
+          return _context12.stop();
+      }
+    }, _callee12);
+  }));
+  return function copyToClipBrd(_x5) {
+    return _ref12.apply(this, arguments);
+  };
+}();
+var pasteFromClipBrd = /*#__PURE__*/function () {
+  var _ref13 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee13() {
+    return _regeneratorRuntime().wrap(function _callee13$(_context13) {
+      while (1) switch (_context13.prev = _context13.next) {
+        case 0:
+          if (!navigator.clipboard) {
+            _context13.next = 5;
+            break;
+          }
+          _context13.next = 3;
+          return navigator.clipboard.readText().then(function () {
+            return 'Paste sucessful';
+          })["catch"](function () {
+            return 'Paste failed';
+          });
+        case 3:
+          _context13.next = 6;
+          break;
+        case 5:
+          return _context13.abrupt("return", 'Clipboard API not supported');
+        case 6:
+        case "end":
+          return _context13.stop();
+      }
+    }, _callee13);
+  }));
+  return function pasteFromClipBrd() {
+    return _ref13.apply(this, arguments);
+  };
+}();
+//new invoice btn 
+var openNewInvBtn = /*#__PURE__*/function () {
+  var _ref14 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee15() {
+    var containerDiv, newInvBtn;
+    return _regeneratorRuntime().wrap(function _callee15$(_context15) {
+      while (1) switch (_context15.prev = _context15.next) {
         case 0:
           containerDiv = document.getElementById('container');
-          invoiceDiv = document.createElement('div');
-          _context8.next = 4;
-          return user.currentWallet.decodeInvoice(invoice);
-        case 4:
-          invoiceData = _context8.sent;
-          amountEl = document.createElement('p');
-          amountEl.innerHTML = "".concat(invoiceData.amount, "sats");
-          dateTimeEl = document.createElement('p');
-          time = invoiceData.time * 1000;
-          fmtdTime = new Date(time).toLocaleTimeString();
-          fmtdDate = new Date(time).toLocaleDateString();
-          dateTimeEl.innerHTML = "".concat(fmtdTime, "<br>").concat(fmtdDate);
-          _context8.next = 14;
-          return user.currentWallet.getQrCode(invoice);
-        case 14:
-          qrCode = _context8.sent;
-          invoiceDiv.appendChild(amountEl);
-          containerDiv.appendChild(invoiceDiv);
-        case 17:
+          newInvBtn = document.createElement('button');
+          newInvBtn.textContent = 'Create Invoice';
+          newInvBtn.addEventListener('click', /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee14() {
+            return _regeneratorRuntime().wrap(function _callee14$(_context14) {
+              while (1) switch (_context14.prev = _context14.next) {
+                case 0:
+                  _context14.next = 2;
+                  return displayInvoiceInputs();
+                case 2:
+                case "end":
+                  return _context14.stop();
+              }
+            }, _callee14);
+          })));
+          containerDiv.appendChild(newInvBtn);
+        case 5:
         case "end":
-          return _context8.stop();
+          return _context15.stop();
       }
-    }, _callee8);
+    }, _callee15);
   }));
-  return function displayInvoice(_x3) {
-    return _ref8.apply(this, arguments);
+  return function openNewInvBtn() {
+    return _ref14.apply(this, arguments);
   };
 }();
-//decodes
-//displays amount, date, time, qrcode, 
-//closetBtn
-//options:
-//btn that copies invoice to clipboard for new invoices
-//pay/cancel btns for paste invoice
-//no btns for decoded invoice
-
-//new invoice btn onclick  
-//input popup: 
-//2 inputs input1 = amount, input2 = memo, 
-//submit new invoice btn,
-//onclick auto copy returned invoice to clipboard, 
-//hide input popup, 
+var displayInvoiceInputs = /*#__PURE__*/function () {
+  var _ref16 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee17() {
+    var containerDiv, newInvoiceDiv, amountInput, memoInput, submitBtn, invoice;
+    return _regeneratorRuntime().wrap(function _callee17$(_context17) {
+      while (1) switch (_context17.prev = _context17.next) {
+        case 0:
+          containerDiv = document.getElementById('div');
+          newInvoiceDiv = document.createElement('div');
+          newInvoiceDiv.id = 'newInvoiceDiv';
+          //2 inputs
+          //input1 = amount
+          amountInput = document.createElement('input');
+          amountInput.placeholder = 'Amount in sats';
+          //input2 = memo
+          memoInput = document.createElement('input');
+          memoInput.placeholder = 'Memo';
+          //submits input data returns invoice
+          submitBtn = document.createElement('button');
+          submitBtn.textContent = 'Create Invoice';
+          _context17.next = 11;
+          return user.currentWallet.postNewInvoice(amountInput.value, memoInput.value);
+        case 11:
+          invoice = _context17.sent;
+          submitBtn.addEventListener('click', /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee16() {
+            return _regeneratorRuntime().wrap(function _callee16$(_context16) {
+              while (1) switch (_context16.prev = _context16.next) {
+                case 0:
+                  // remove input div
+                  document.getElementById('newInvoiceDiv').remove();
+                  //open pay invoice 
+                  _context16.next = 3;
+                  return displayInvoice(invoice);
+                case 3:
+                  _context16.next = 5;
+                  return copyToClipBrd(invoice);
+                case 5:
+                case "end":
+                  return _context16.stop();
+              }
+            }, _callee16);
+          })));
+          _context17.next = 15;
+          return appendClsBtn("newInvoiceDiv");
+        case 15:
+          newInvoiceDiv.appendChild(amountInput);
+          newInvoiceDiv.appendChild(memoInput);
+          newInvoiceDiv.appendChild(submitBtn);
+          containerDiv.appendChild(newInvoiceDiv);
+        case 19:
+        case "end":
+          return _context17.stop();
+      }
+    }, _callee17);
+  }));
+  return function displayInvoiceInputs() {
+    return _ref16.apply(this, arguments);
+  };
+}();
 
 //paste invoice btn
-//onclick auto paste from clipboard
+var handlePasteInvoice = /*#__PURE__*/function () {
+  var _ref18 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee19() {
+    var containerDiv, pasteInvoiceBtn, invoice;
+    return _regeneratorRuntime().wrap(function _callee19$(_context19) {
+      while (1) switch (_context19.prev = _context19.next) {
+        case 0:
+          containerDiv = document.getElementById('container');
+          pasteInvoiceBtn = document.createElement('button');
+          pasteInvoiceBtn.textContent = 'Paste Invoice';
+
+          //onclick auto paste from clipboard
+          _context19.next = 5;
+          return pasteFromClipBrd();
+        case 5:
+          invoice = _context19.sent;
+          pasteInvoiceBtn.addEventListener('click', /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee18() {
+            return _regeneratorRuntime().wrap(function _callee18$(_context18) {
+              while (1) switch (_context18.prev = _context18.next) {
+                case 0:
+                  _context18.next = 2;
+                  return user.currentWallet.postPayment(invoice);
+                case 2:
+                  _context18.next = 4;
+                  return user.currentWallet.decodeInvoice(invoice);
+                case 4:
+                case "end":
+                  return _context18.stop();
+              }
+            }, _callee18);
+          })));
+        case 7:
+        case "end":
+          return _context19.stop();
+      }
+    }, _callee19);
+  }));
+  return function handlePasteInvoice() {
+    return _ref18.apply(this, arguments);
+  };
+}();
+
 //pending??
 //on sucessful decode display decoded invoice popup
 //on failure display error
@@ -694,6 +946,7 @@ var displayInvoice = /*#__PURE__*/function () {
 //close btn
 
 await balanceOfEach();
+await displayWalletsSum();
 await displayTxHistory();
 
 __webpack_async_result__();

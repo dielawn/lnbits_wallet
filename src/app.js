@@ -29,7 +29,7 @@ console.log('Current wallet balance', balance)
 
 //btc usd price
 const btcUsdPrice = await user.getBtcUsdPrice()
-console.log('BTC/usd$', btcUsdPrice)
+console.log('BTC/usd', btcUsdPrice)
 
 //current wallet balance
 const wallet = await user.currentWallet.wallet_name
@@ -40,11 +40,23 @@ console.log('Current wallet name:', wallet)
 
 
 // sum balance of each wallet
-const totalBalance = await user.sumBalances().then(total => {
-    return  total
- })
-user.totalBalance = totalBalance
-console.log(user.totalBalance)
+const displayWalletsSum = async () => {
+    const containerDiv = document.getElementById('container')
+    const totalDiv = document.createElement('div')
+
+    const totalBalance = await user.sumBalances().then(total => {
+        return  total
+     })
+    user.totalBalance = totalBalance
+    
+    const balanceEl = document.createElement('h3')
+    balanceEl.innerHTML = `Total: ${totalBalance}sats`
+
+    totalDiv.appendChild(balanceEl)
+
+    containerDiv.appendChild(totalDiv)
+}
+
 
 //pseudo DOM stuff
 
@@ -104,6 +116,7 @@ const displayTxHistory = async () => {
         containerDiv.appendChild(txDiv)
     })
 }
+//filter data
 //download to csv
 
 
@@ -152,7 +165,7 @@ const appendClsBtn = async (elIdToRemove) => {
     const clsBtn = document.createElement('button')
     clsBtn.classList.add('clsBtn')
     clsBtn.textContent = 'X'
-    clsBtn.addEventListener('click' = async () => {
+    clsBtn.addEventListener('click', async () => {
         toBeRemoved.remove()
     })
     toBeRemoved.appendChild(clsBtn)
@@ -191,7 +204,7 @@ const openNewInvBtn = async () => {
     const containerDiv = document.getElementById('container')
     const newInvBtn = document.createElement('button')
     newInvBtn.textContent = 'Create Invoice'
-    newInvBtn.addEventListener('click' = async () => {
+    newInvBtn.addEventListener('click', async () => {
         //inputs popup: 
         await displayInvoiceInputs()
     })    
@@ -201,22 +214,30 @@ const openNewInvBtn = async () => {
 
 const displayInvoiceInputs = async () => {
     const containerDiv = document.getElementById('div')
-
+         
     const newInvoiceDiv = document.createElement('div')
     newInvoiceDiv.id = 'newInvoiceDiv'
-
+    //2 inputs
+    //input1 = amount
     const amountInput = document.createElement('input')
     amountInput.placeholder = 'Amount in sats'
-
+    //input2 = memo
     const memoInput = document.createElement('input')
     memoInput.placeholder = 'Memo'
-
+    //submits input data returns invoice
     const submitBtn = document.createElement('button')
     submitBtn.textContent = 'Create Invoice'
-    submitBtn.addEventListener('click', async () => (
-        user.currentWallet.postNewInvoice(amountInput.value, memoInput.value)
 
-    ))
+    let invoice =  await user.currentWallet.postNewInvoice(amountInput.value, memoInput.value)
+    submitBtn.addEventListener('click', async () => {
+        // remove input div
+        document.getElementById('newInvoiceDiv').remove()
+        //open pay invoice 
+        await displayInvoice(invoice)
+        //auto copy invoice to clipboard
+        await copyToClipBrd(invoice)
+    })
+
     await appendClsBtn("newInvoiceDiv")
     newInvoiceDiv.appendChild(amountInput)
     newInvoiceDiv.appendChild(memoInput)
@@ -224,13 +245,24 @@ const displayInvoiceInputs = async () => {
 
     containerDiv.appendChild(newInvoiceDiv)
 }
-//2 inputs input1 = amount, input2 = memo, 
-//submit new invoice btn,
-//onclick auto copy returned invoice to clipboard, 
-//hide input popup, 
+
 
 //paste invoice btn
-//onclick auto paste from clipboard
+const handlePasteInvoice = async () => {
+    const containerDiv = document.getElementById('container')
+
+    const pasteInvoiceBtn = document.createElement('button')
+    pasteInvoiceBtn.textContent = 'Paste Invoice'
+
+    //onclick auto paste from clipboard
+    const invoice = await pasteFromClipBrd()
+    pasteInvoiceBtn.addEventListener('click', async () => {
+        await user.currentWallet.postPayment(invoice)
+        await user.currentWallet.decodeInvoice(invoice)
+    })
+
+}
+
 //pending??
 //on sucessful decode display decoded invoice popup
 //on failure display error
@@ -244,8 +276,12 @@ const displayInvoiceInputs = async () => {
 //submit btn
 //close btn
 
-await balanceOfEach()
-await displayTxHistory()
+
+    await balanceOfEach()
+    await displayWalletsSum()
+    await displayTxHistory()
+
+
 
 export {
     user
