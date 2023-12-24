@@ -468,7 +468,6 @@ var initializeUser = /*#__PURE__*/function () {
   };
 }();
 await initializeUser();
-
 //DATA TO VARIABLES
 
 //balance of selected wallet
@@ -494,6 +493,7 @@ console.log(user.totalBalance);
 
 //pseudo DOM stuff
 
+//display balance and name of each wallet
 var balanceOfEach = /*#__PURE__*/function () {
   var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
     var containerDiv;
@@ -509,7 +509,9 @@ var balanceOfEach = /*#__PURE__*/function () {
                 while (1) switch (_context3.prev = _context3.next) {
                   case 0:
                     user.currentWallet = wallet;
-                  case 1:
+                    _context3.next = 3;
+                    return displayTxHistory();
+                  case 3:
                   case "end":
                     return _context3.stop();
                 }
@@ -531,12 +533,136 @@ var balanceOfEach = /*#__PURE__*/function () {
     return _ref3.apply(this, arguments);
   };
 }();
-await balanceOfEach();
 
 //display tx history in expandable window 
+var displayTxHistory = /*#__PURE__*/function () {
+  var _ref5 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6() {
+    var containerDiv, transactions;
+    return _regeneratorRuntime().wrap(function _callee6$(_context6) {
+      while (1) switch (_context6.prev = _context6.next) {
+        case 0:
+          containerDiv = document.getElementById('container');
+          _context6.next = 3;
+          return user.currentWallet.getTxHistory();
+        case 3:
+          transactions = _context6.sent;
+          transactions.forEach( /*#__PURE__*/function () {
+            var _ref6 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5(tx) {
+              var txDiv, amountEl, feeEl, memoEl, bolt11El, hash, dateTimeEl, expiryEl;
+              return _regeneratorRuntime().wrap(function _callee5$(_context5) {
+                while (1) switch (_context5.prev = _context5.next) {
+                  case 0:
+                    txDiv = document.createElement('div');
+                    txDiv.classList.add('txDiv');
+                    amountEl = document.createElement('p');
+                    amountEl.innerHTML = "".concat(tx.amount / 1000, "sats");
+                    feeEl = document.createElement('p');
+                    feeEl.innerHTML = "Fee: ".concat(tx.fee, " mSats");
+                    memoEl = document.createElement('p');
+                    memoEl.innerHTML = "Memo: ".concat(tx.memo);
+                    bolt11El = document.createElement('p');
+                    hash = tx.bolt11;
+                    bolt11El.innerHTML = "".concat(abrvHash(hash, 11));
+                    dateTimeEl = document.createElement('p');
+                    _context5.next = 14;
+                    return handleDateCodes(tx.time);
+                  case 14:
+                    dateTimeEl.innerHTML = _context5.sent;
+                    expiryEl = document.createElement('p');
+                    _context5.next = 18;
+                    return handleDateCodes(tx.expiry);
+                  case 18:
+                    expiryEl.innerHTML = _context5.sent;
+                    txDiv.appendChild(amountEl);
+                    txDiv.appendChild(feeEl);
+                    txDiv.appendChild(memoEl);
+                    txDiv.appendChild(bolt11El);
+                    txDiv.appendChild(dateTimeEl);
+                    txDiv.appendChild(expiryEl);
+                    containerDiv.appendChild(txDiv);
+                  case 26:
+                  case "end":
+                    return _context5.stop();
+                }
+              }, _callee5);
+            }));
+            return function (_x) {
+              return _ref6.apply(this, arguments);
+            };
+          }());
+        case 5:
+        case "end":
+          return _context6.stop();
+      }
+    }, _callee6);
+  }));
+  return function displayTxHistory() {
+    return _ref5.apply(this, arguments);
+  };
+}();
 //download to csv
 
-//invoice popup: 
+//make hash display shorter
+var abrvHash = function abrvHash(hash, startEnd) {
+  return "".concat(hash.substring(0, startEnd), "...").concat(hash.substring(hash.length - startEnd, hash.length));
+};
+var handleDateCodes = /*#__PURE__*/function () {
+  var _ref7 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee7(time) {
+    var fmtdTime, fmtdDate;
+    return _regeneratorRuntime().wrap(function _callee7$(_context7) {
+      while (1) switch (_context7.prev = _context7.next) {
+        case 0:
+          time = time * 1000;
+          fmtdTime = new Date(time).toLocaleTimeString();
+          fmtdDate = new Date(time).toLocaleDateString();
+          return _context7.abrupt("return", "".concat(fmtdTime, "<br>").concat(fmtdDate));
+        case 4:
+        case "end":
+          return _context7.stop();
+      }
+    }, _callee7);
+  }));
+  return function handleDateCodes(_x2) {
+    return _ref7.apply(this, arguments);
+  };
+}();
+
+//invoice popup:
+var displayInvoice = /*#__PURE__*/function () {
+  var _ref8 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee8(invoice) {
+    var containerDiv, invoiceDiv, invoiceData, amountEl, dateTimeEl, time, fmtdTime, fmtdDate, qrCode;
+    return _regeneratorRuntime().wrap(function _callee8$(_context8) {
+      while (1) switch (_context8.prev = _context8.next) {
+        case 0:
+          containerDiv = document.getElementById('container');
+          invoiceDiv = document.createElement('div');
+          _context8.next = 4;
+          return user.currentWallet.decodeInvoice(invoice);
+        case 4:
+          invoiceData = _context8.sent;
+          amountEl = document.createElement('p');
+          amountEl.innerHTML = "".concat(invoiceData.amount, "sats");
+          dateTimeEl = document.createElement('p');
+          time = invoiceData.time * 1000;
+          fmtdTime = new Date(time).toLocaleTimeString();
+          fmtdDate = new Date(time).toLocaleDateString();
+          dateTimeEl.innerHTML = "".concat(fmtdTime, "<br>").concat(fmtdDate);
+          _context8.next = 14;
+          return user.currentWallet.getQrCode(invoice);
+        case 14:
+          qrCode = _context8.sent;
+          invoiceDiv.appendChild(amountEl);
+          containerDiv.appendChild(invoiceDiv);
+        case 17:
+        case "end":
+          return _context8.stop();
+      }
+    }, _callee8);
+  }));
+  return function displayInvoice(_x3) {
+    return _ref8.apply(this, arguments);
+  };
+}();
 //decodes
 //displays amount, date, time, qrcode, 
 //closetBtn
@@ -566,6 +692,9 @@ await balanceOfEach();
 //popup input = wallet name
 //submit btn
 //close btn
+
+await balanceOfEach();
+await displayTxHistory();
 
 __webpack_async_result__();
 } catch(e) { __webpack_async_result__(e); } }, 1);
