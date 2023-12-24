@@ -42,4 +42,4 @@ user.sumBalances().then(total => {
     console.log('Total', total)
 })
 
-console.log(`${wallet}: BTC/usd$${btcUsdPrice} Total: $${sumBalances}`)
+console.log(`${wallet}:${balance} BTC/usd$${btcUsdPrice} Total: $${sumBalances}`)
