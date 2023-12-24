@@ -6,6 +6,7 @@ export class User {
         this.wallets = []
         this.currentWallet = null
     }
+    //add a new key set
     addWallet(id, admKey, invKey, walletName) {
         const wlt = new Wallet()
         wlt.wallet_id = id

@@ -33,11 +33,11 @@ export class Wallet {
         }             
     }
     //returns payable invoice
-    postNewInvoice = async (amount) => {
+    postNewInvoice = async (amount, memo) => {
         let json = {
             unit: 'sat',
             amount: Number(amount),
-            memo: 'plebWallet',
+            memo: memo,
             out: false,
             description_hash: ''
         }    
@@ -94,6 +94,7 @@ export class Wallet {
             console.error(`Error  ${this.wallet_name}>getQrCode: ${error}`)
         }
     }
+    
     //under construction
     getWalletList = async () => {
         let data = await getData(WALLET_URL, this.admin_key)
