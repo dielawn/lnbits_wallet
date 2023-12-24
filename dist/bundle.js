@@ -84,26 +84,43 @@ var User = /*#__PURE__*/_createClass(function User() {
       }
     }, _callee3);
   })));
-  _defineProperty(this, "getBtcUsdPrice", /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
-    var data, json, price;
+  _defineProperty(this, "initialize", /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
     return _regeneratorRuntime().wrap(function _callee4$(_context4) {
       while (1) switch (_context4.prev = _context4.next) {
         case 0:
           _context4.next = 2;
-          return (0,_getPost_js__WEBPACK_IMPORTED_MODULE_0__.getData)("https://api.coinbase.com/v2/prices/BTC-USD/spot");
+          return _this.sumBalances().then(function (total) {
+            return total;
+          });
         case 2:
-          data = _context4.sent;
-          json = JSON.parse(data);
-          price = json.data.amount;
-          return _context4.abrupt("return", price);
-        case 6:
+          _this.totalBalance = _context4.sent;
+        case 3:
         case "end":
           return _context4.stop();
       }
     }, _callee4);
   })));
+  _defineProperty(this, "getBtcUsdPrice", /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5() {
+    var data, json, price;
+    return _regeneratorRuntime().wrap(function _callee5$(_context5) {
+      while (1) switch (_context5.prev = _context5.next) {
+        case 0:
+          _context5.next = 2;
+          return (0,_getPost_js__WEBPACK_IMPORTED_MODULE_0__.getData)("https://api.coinbase.com/v2/prices/BTC-USD/spot");
+        case 2:
+          data = _context5.sent;
+          json = JSON.parse(data);
+          price = json.data.amount;
+          return _context5.abrupt("return", price);
+        case 6:
+        case "end":
+          return _context5.stop();
+      }
+    }, _callee5);
+  })));
   this.wallets = [];
   this.currentWallet = null;
+  this.totalBalance = null;
 });
 
 /***/ }),
@@ -382,6 +399,9 @@ var Wallet = /*#__PURE__*/_createClass(function Wallet(id, admKey, invKey, walle
 
 __webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __webpack_async_result__) => { try {
 __webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   user: () => (/* binding */ user)
+/* harmony export */ });
 /* harmony import */ var _User_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./User.js */ "./src/User.js");
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./config.js */ "./src/config.js");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
@@ -390,65 +410,163 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 
-console.log(_config_js__WEBPACK_IMPORTED_MODULE_1__.WALLETS);
 var user = new _User_js__WEBPACK_IMPORTED_MODULE_0__.User();
-
-//wallets keys saved in config.js include config.js in .gitignore
-var loadWallets = /*#__PURE__*/function () {
-  var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-    var i;
-    return _regeneratorRuntime().wrap(function _callee$(_context) {
-      while (1) switch (_context.prev = _context.next) {
+//INITIALIZATION
+var initializeUser = /*#__PURE__*/function () {
+  var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
+    var loadWallets;
+    return _regeneratorRuntime().wrap(function _callee2$(_context2) {
+      while (1) switch (_context2.prev = _context2.next) {
         case 0:
-          i = 0;
-        case 1:
-          if (!(i < _config_js__WEBPACK_IMPORTED_MODULE_1__.WALLETS.length)) {
-            _context.next = 9;
-            break;
-          }
-          _context.next = 4;
-          return user.addWallet(_config_js__WEBPACK_IMPORTED_MODULE_1__.WALLETS[i].ID, _config_js__WEBPACK_IMPORTED_MODULE_1__.WALLETS[i].ADMIN_KEY, _config_js__WEBPACK_IMPORTED_MODULE_1__.WALLETS[i].INV_KEY, _config_js__WEBPACK_IMPORTED_MODULE_1__.WALLETS[i].WALLET_NAME);
-        case 4:
-          _context.next = 6;
-          return user.wallets[i].initialize();
+          //wallets keys saved in config.js include config.js in .gitignore
+          loadWallets = /*#__PURE__*/function () {
+            var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
+              var i;
+              return _regeneratorRuntime().wrap(function _callee$(_context) {
+                while (1) switch (_context.prev = _context.next) {
+                  case 0:
+                    i = 0;
+                  case 1:
+                    if (!(i < _config_js__WEBPACK_IMPORTED_MODULE_1__.WALLETS.length)) {
+                      _context.next = 9;
+                      break;
+                    }
+                    _context.next = 4;
+                    return user.addWallet(_config_js__WEBPACK_IMPORTED_MODULE_1__.WALLETS[i].ID, _config_js__WEBPACK_IMPORTED_MODULE_1__.WALLETS[i].ADMIN_KEY, _config_js__WEBPACK_IMPORTED_MODULE_1__.WALLETS[i].INV_KEY, _config_js__WEBPACK_IMPORTED_MODULE_1__.WALLETS[i].WALLET_NAME);
+                  case 4:
+                    _context.next = 6;
+                    return user.wallets[i].initialize();
+                  case 6:
+                    i++;
+                    _context.next = 1;
+                    break;
+                  case 9:
+                  case "end":
+                    return _context.stop();
+                }
+              }, _callee);
+            }));
+            return function loadWallets() {
+              return _ref2.apply(this, arguments);
+            };
+          }(); //load wallet to user.wallets
+          _context2.next = 3;
+          return loadWallets();
+        case 3:
+          _context2.next = 5;
+          return user.setCurrentWallet(0);
+        case 5:
+          console.log('user:', user);
         case 6:
-          i++;
-          _context.next = 1;
-          break;
-        case 9:
         case "end":
-          return _context.stop();
+          return _context2.stop();
       }
-    }, _callee);
+    }, _callee2);
   }));
-  return function loadWallets() {
+  return function initializeUser() {
     return _ref.apply(this, arguments);
   };
 }();
+await initializeUser();
 
-//load wallet to user.wallets
-await loadWallets();
+//DATA TO VARIABLES
 
-//set default
-await user.setCurrentWallet(0);
-
-//ballance of selected wallet
+//balance of selected wallet
 var balance = await user.currentWallet.getBalance().then(function (total) {
   return total;
 });
-console.log('balance', balance);
+console.log('Current wallet balance', balance);
 
 //btc usd price
 var btcUsdPrice = await user.getBtcUsdPrice();
+console.log('BTC/usd$', btcUsdPrice);
+
+//current wallet balance
 var wallet = await user.currentWallet.wallet_name;
-var sumBalances = await user.sumBalances().then(function (balance) {
-  return balance;
+console.log('Current wallet name:', wallet);
+
+// sum balance of each wallet
+var totalBalance = await user.sumBalances().then(function (total) {
+  return total;
 });
-console.log('user:', user);
-user.sumBalances().then(function (total) {
-  console.log('Total', total);
-});
-console.log("".concat(wallet, ": BTC/usd$").concat(btcUsdPrice, " Total: $").concat(sumBalances));
+user.totalBalance = totalBalance;
+console.log(user.totalBalance);
+
+//pseudo DOM stuff
+
+var balanceOfEach = /*#__PURE__*/function () {
+  var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
+    var containerDiv;
+    return _regeneratorRuntime().wrap(function _callee4$(_context4) {
+      while (1) switch (_context4.prev = _context4.next) {
+        case 0:
+          containerDiv = document.getElementById('container');
+          user.wallets.forEach(function (wallet) {
+            //clickable wallet cards to set wallet keys
+            var infoDiv = document.createElement('div');
+            infoDiv.addEventListener('click', /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
+              return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+                while (1) switch (_context3.prev = _context3.next) {
+                  case 0:
+                    user.currentWallet = wallet;
+                  case 1:
+                  case "end":
+                    return _context3.stop();
+                }
+              }, _callee3);
+            })));
+            //wallet names and balances
+            var walletInfo = document.createElement('h3');
+            walletInfo.innerHTML = "".concat(wallet.wallet_name, ":<br>").concat(wallet.balance, " sasts");
+            infoDiv.appendChild(walletInfo);
+            containerDiv.appendChild(infoDiv);
+          });
+        case 2:
+        case "end":
+          return _context4.stop();
+      }
+    }, _callee4);
+  }));
+  return function balanceOfEach() {
+    return _ref3.apply(this, arguments);
+  };
+}();
+await balanceOfEach();
+
+//display tx history in expandable window 
+//download to csv
+
+//invoice popup: 
+//decodes
+//displays amount, date, time, qrcode, 
+//closetBtn
+//options:
+//btn that copies invoice to clipboard for new invoices
+//pay/cancel btns for paste invoice
+//no btns for decoded invoice
+
+//new invoice btn onclick  
+//input popup: 
+//2 inputs input1 = amount, input2 = memo, 
+//submit new invoice btn,
+//onclick auto copy returned invoice to clipboard, 
+//hide input popup, 
+
+//paste invoice btn
+//onclick auto paste from clipboard
+//pending??
+//on sucessful decode display decoded invoice popup
+//on failure display error
+//confirmation cancel btns
+
+//decode invoice btn
+//displays invoice popup
+
+//new wallet btn
+//popup input = wallet name
+//submit btn
+//close btn
+
 __webpack_async_result__();
 } catch(e) { __webpack_async_result__(e); } }, 1);
 

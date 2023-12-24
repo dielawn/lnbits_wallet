@@ -5,6 +5,7 @@ export class User {
     constructor() {
         this.wallets = []
         this.currentWallet = null
+        this.totalBalance = null
     }
     //add a new key set
     addWallet = async (id, admKey, invKey, walletName) => {
@@ -23,6 +24,11 @@ export class User {
             sum += this.wallets[i].balance
         }
         return sum
+    }
+    initialize = async () => {
+        this.totalBalance = await this.sumBalances().then(total => {
+            return total
+        })
     }
     getBtcUsdPrice = async () => {
         let data = await getData(`https://api.coinbase.com/v2/prices/BTC-USD/spot`)
