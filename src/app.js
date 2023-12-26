@@ -28,7 +28,7 @@ await displayHeader()
 const displayWallets = async () => {
     await Promise.all(
         user.wallets.map(async (wallet) => {
-            const walletDiv = document.createElement('h3')
+            const walletDiv = document.createElement('p')
             walletDiv.classList.add('walletDiv')
             walletDiv.id = `wallet${wallet.wallet_name.substring(0, 3)}`
             walletDiv.innerHTML = `${wallet.wallet_name}:<br>${wallet.balance} sats` 
@@ -44,7 +44,7 @@ const dispCreatetInvBtn = async () => {
         user.wallets.map(async (wallet) => {
             const newInvBtn = document.createElement('button')
             newInvBtn.classList.add('newInvBtn')
-            newInvBtn.textContent = `${wallet.wallet_name} Create Invoice`
+            newInvBtn.innerHTML = ` <img src="../images/arrow_downward_FILL0_wght400_GRAD0_opsz24.png" alt="deposit">`
     
             newInvBtn.addEventListener('click', async () => {
                 const amountInput = document.getElementById('amountInput')           
@@ -64,7 +64,7 @@ const dispPayInvBtn = async () => {
     await Promise.all(
         user.wallets.map(async (wallet) => {
             const payInvBtn = document.createElement('button')
-            payInvBtn.textContent = 'Paste Invoice'
+            payInvBtn.innerHTML = `<img src="./images/arrow_upward_FILL0_wght400_GRAD0_opsz24.png" alt="pay">`
             payInvBtn.classList.add('payInvBtn')
             payInvBtn.addEventListener('click', async () => {
                 const invoice = await navigator.clipboard.readText()

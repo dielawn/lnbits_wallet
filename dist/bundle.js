@@ -77,8 +77,9 @@ var User = /*#__PURE__*/_createClass(function User() {
           for (i = 0; i < _this.wallets.length; i++) {
             sum += _this.wallets[i].balance;
           }
+          _this.totalBalance = sum;
           return _context3.abrupt("return", sum);
-        case 3:
+        case 4:
         case "end":
           return _context3.stop();
       }
@@ -521,7 +522,7 @@ var displayWallets = /*#__PURE__*/function () {
               return _regeneratorRuntime().wrap(function _callee4$(_context4) {
                 while (1) switch (_context4.prev = _context4.next) {
                   case 0:
-                    walletDiv = document.createElement('h3');
+                    walletDiv = document.createElement('p');
                     walletDiv.classList.add('walletDiv');
                     walletDiv.id = "wallet".concat(wallet.wallet_name.substring(0, 3));
                     walletDiv.innerHTML = "".concat(wallet.wallet_name, ":<br>").concat(wallet.balance, " sats");
@@ -563,7 +564,7 @@ var dispCreatetInvBtn = /*#__PURE__*/function () {
                   case 0:
                     newInvBtn = document.createElement('button');
                     newInvBtn.classList.add('newInvBtn');
-                    newInvBtn.textContent = "".concat(wallet.wallet_name, " Create Invoice");
+                    newInvBtn.innerHTML = " <img src=\"../images/arrow_downward_FILL0_wght400_GRAD0_opsz24.png\" alt=\"deposit\">";
                     newInvBtn.addEventListener('click', /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6() {
                       var amountInput, memoInput, invoice;
                       return _regeneratorRuntime().wrap(function _callee6$(_context6) {
@@ -619,7 +620,7 @@ var dispPayInvBtn = /*#__PURE__*/function () {
                 while (1) switch (_context10.prev = _context10.next) {
                   case 0:
                     payInvBtn = document.createElement('button');
-                    payInvBtn.textContent = 'Paste Invoice';
+                    payInvBtn.innerHTML = "<img src=\"./images/arrow_upward_FILL0_wght400_GRAD0_opsz24.png\" alt=\"pay\">";
                     payInvBtn.classList.add('payInvBtn');
                     payInvBtn.addEventListener('click', /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee9() {
                       var invoice, amount;
