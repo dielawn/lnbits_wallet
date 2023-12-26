@@ -59,7 +59,11 @@ export class Wallet {
             bolt11: invoice,
         } 
         try {
-            await customAlert(invoice)  
+            const amount = await this.returnInvoiceAmount(invoice)
+            if (!confirm(`Pay ${amount} sats?
+            ${invoice}`)) {
+                return
+            }
             const response = await postJson(PAYMENTS_URL,  this.admin_key, "application/json", JSON.stringify(json))    
             const paymentHash = response.payment_hash
             console.log(`Payment successful: ${paymentHash}`)
@@ -68,12 +72,16 @@ export class Wallet {
             console.error(`Error  ${this.wallet_name}>postPayment: ${error}`)
         }    
     }
+    customAlert = async (invoice) => {
+       
+
+    }
     decodeInvoice = async (invoice) => {
         let json = {
             data: invoice
         }
         try {
-            const data = await postJson(PAYMENTS_URL, this.inv_rd_key, 'application/json', JSON.stringify(json))
+            const data = await postJson(`${PAYMENTS_URL}/decode`, this.inv_rd_key, 'application/json', JSON.stringify(json))
             return data
         } catch (error) {
             console.error(`Error  ${this.wallet_name}>decodeInvoice: ${error}`)

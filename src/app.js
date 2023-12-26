@@ -18,48 +18,94 @@ const initializeUser = async () => {
     console.log('user:', user)
     console.log(user.wallets.length)
 }
-
 await initializeUser()
-// sum balance of each wallet
-const walletsSum = `${await user.sumBalances()}`
-console.log('walletSum', walletsSum)
 
-const nameBalanceTxt = await Promise.all(
-    user.wallets.map(async (wallet) => {
-        //name and balance
-        return `${wallet.wallet_name}: ${wallet.balance} sats` 
-    })
-)
-console.log(nameBalanceTxt.join('\n'))
+const displayHeader = async () => {
+    document.getElementById('header').innerHTML = `${await user.sumBalances()}`
+}
+await displayHeader()
+
+const displayWallets = async () => {
+    await Promise.all(
+        user.wallets.map(async (wallet) => {
+            const walletDiv = document.createElement('h3')
+            walletDiv.classList.add('walletDiv')
+            walletDiv.id = `wallet${wallet.wallet_name.substring(0, 3)}`
+            walletDiv.innerHTML = `${wallet.wallet_name}:<br>${wallet.balance} sats` 
+            document.getElementById('walletsDiv').appendChild(walletDiv)
+        })
+    )
+}
+await displayWallets()
+
+// new invoice btn 
+const dispCreatetInvBtn = async () => {    
+    await Promise.all(
+        user.wallets.map(async (wallet) => {
+            const newInvBtn = document.createElement('button')
+            newInvBtn.classList.add('newInvBtn')
+            newInvBtn.textContent = `${wallet.wallet_name} Create Invoice`
+    
+            newInvBtn.addEventListener('click', async () => {
+                const amountInput = document.getElementById('amountInput')           
+                const memoInput = document.getElementById('memoInput')
+                const invoice = await wallet.postNewInvoice(amountInput.value, memoInput.value)
+                console.log(invoice.payment_request)
+                await copyToClipBrd(invoice.payment_request)
+
+            })    
+            document.getElementById(`wallet${wallet.wallet_name.substring(0, 3)}`).appendChild(newInvBtn)
+        })
+    )
+}
+await dispCreatetInvBtn()
+
+const dispPayInvBtn = async () => {
+    await Promise.all(
+        user.wallets.map(async (wallet) => {
+            const payInvBtn = document.createElement('button')
+            payInvBtn.textContent = 'Paste Invoice'
+            payInvBtn.classList.add('payInvBtn')
+            payInvBtn.addEventListener('click', async () => {
+                const invoice = await navigator.clipboard.readText()
+                const amount = await wallet.returnInvoiceAmount(invoice)
+                await wallet.postPayment(invoice)
+            })
+            document.getElementById(`wallet${wallet.wallet_name.substring(0, 3)}`).appendChild(payInvBtn)
+        })
+    )
+}
+await dispPayInvBtn()
 
 
 const handleDateCodes = async (time) => {
     time = time * 1000
     const fmtdTime = new Date(time).toLocaleTimeString()
     const fmtdDate = new Date(time).toLocaleDateString()
-    return `${fmtdTime} ${fmtdDate}`
+    return `${fmtdTime}<br>${fmtdDate}`
 }
 
-const returnTxHisoryTxt = await Promise.all(
-    user.wallets.map(async (wallet) => {
-        //tx history
-        const transactions = await wallet.getTxHistory()    
-        const txTxt = await Promise.all(
-            transactions.map(async (tx) => {       
-                const dateTime = await handleDateCodes(tx.time)          
-                //transaction data to txt   
-                return `${wallet.wallet_name}:
-${tx.amount / 1000} sats
-Fee: ${tx.fee} mSats
-Memo: ${tx.memo}         
-${dateTime}`   
-                   
-            })
-        ) 
-        return txTxt.join('\n\n')
-    })
-)
-console.log(returnTxHisoryTxt.join('\n\n\n'))
+const displayTxHistory = async () => {
+    await Promise.all(
+        user.wallets.map(async (wallet) => {
+            const txEl = document.createElement('div')
+            txEl.classList.add('txEl')
+            const transactions = await wallet.getTxHistory()    
+            await Promise.all(
+                transactions.map(async (tx) => {                       
+                    const dateTime = await handleDateCodes(tx.time)          
+                    //transaction data to txt   
+                    const txTxt = document.createElement('p')
+                    txTxt.classList.add('txTxt')
+                    txTxt.innerHTML = `${wallet.wallet_name}:<br>${tx.amount / 1000} sats<br>Fee: ${tx.fee} mSats<br>Memo: ${tx.memo}<br>${dateTime}`        
+                    txEl.appendChild(txTxt)
+                })
+            ) 
+            document.getElementById(`wallet${wallet.wallet_name.substring(0, 3)}`).appendChild(txEl)
+        })
+    )
+}
+await displayTxHistory()
 
 
 const returnInvoiceTxt = async (wallet) => {
@@ -74,21 +120,7 @@ const returnInvoiceTxt = async (wallet) => {
         ${qrCode} <br>`
         
 }
-//new invoice btn 
-const openInvFrmBtn = async (wallet) => {
- 
-    const infoDiv = document.getElementById(`infoDiv${wallet.wallet_name.substring(0, 3)}`)
-    
-    const newInvBtn = document.createElement('button')
-    newInvBtn.classList.add('newInvBtn')
-    newInvBtn.textContent = `Create ${wallet.wallet_name} Invoice`
-    newInvBtn.addEventListener('click', async () => {
-    //inputs popup: 
-    await displayInvoiceInputs()
-})    
 
-infoDiv.appendChild(newInvBtn)
-}
     
 //closetBtn for pop ups
 const appendClsBtn = async (elIdToRemove) => {
@@ -111,10 +143,10 @@ const handlePasteInvoice = async (wallet) => {
     pasteInvoiceBtn.textContent = 'Paste Invoice'
 
     //onclick auto paste from clipboard
-    const invoice = await pasteFromClipBrd()
+    const invoice = await navigator.clipboard.readText()
     pasteInvoiceBtn.addEventListener('click', async () => {
         await wallet.postPayment(invoice)
-        await wallet.decodeInvoice(invoice)
+        console.log(await wallet.returnInvoiceAmount(invoice))
     })
 
     containerDiv.appendChild(pasteInvoiceBtn)
@@ -123,17 +155,7 @@ const handlePasteInvoice = async (wallet) => {
 
 //footer
 const displayFooter = async () => {
-    // const prevInfo = document.querySelectorAll('.footer')
-    // if (prevInfo) {
-    //     prevInfo.forEach((el) => {
-    //         el.remove()
-    //     })        
-    // }
-    //btc usd price
-    const btcUsdPrice = await user.getBtcUsdPrice()
-    const footerEl = document.getElementById('footer')
-    footerEl.innerHTML = `Interface by dielawn, Powered by LNBits <br> BTC $${btcUsdPrice} usd`
-
+    document.getElementById('footer').innerHTML = `Interface by dielawn, Powered by LNBits <br> BTC $${await user.getBtcUsdPrice()}`
 }
 
 //tools 
@@ -146,19 +168,12 @@ if(navigator.clipboard) {
 } else return 'Clipboard API not supported'
 }
 
-const pasteFromClipBrd = async () => {
-if(navigator.clipboard) {
-   await navigator.clipboard.readText()
-   .then(() => 'Paste sucessful')
-   .catch(() => 'Paste failed')
-} else return 'Clipboard API not supported'
-}
 //display shorter hash
 const abrvHash = (hash, startEnd) => {
     return `${hash.substring(0, startEnd)}...${hash.substring(hash.length - startEnd, hash.length)}`
  }
 
-
+ await displayFooter()
 
 const app = async () => {      
     
@@ -167,5 +182,6 @@ const app = async () => {
 
 document.addEventListener('click', async () => {
     // app()  
+    
 })
 

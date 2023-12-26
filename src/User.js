@@ -23,6 +23,7 @@ export class User {
         for (let i = 0; i < this.wallets.length; i++) {
             sum += this.wallets[i].balance
         }
+        this.totalBalance = sum
         return sum
     }
     initialize = async () => {
