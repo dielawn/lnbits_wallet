@@ -498,7 +498,7 @@ var displayHeader = /*#__PURE__*/function () {
           return user.sumBalances();
         case 3:
           _context3.t1 = _context3.sent;
-          document.getElementById('header').innerHTML = _context3.t0.concat.call(_context3.t0, _context3.t1);
+          document.getElementById('header').innerHTML = _context3.t0.concat.call(_context3.t0, _context3.t1, " sats");
         case 5:
         case "end":
           return _context3.stop();
@@ -566,20 +566,31 @@ var dispCreatetInvBtn = /*#__PURE__*/function () {
                     newInvBtn.classList.add('newInvBtn');
                     newInvBtn.innerHTML = " <img src=\"../images/arrow_downward_FILL0_wght400_GRAD0_opsz24.png\" alt=\"deposit\">";
                     newInvBtn.addEventListener('click', /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6() {
-                      var amountInput, memoInput, invoice;
+                      var amountInput, isValidAmount, memoInput, invoice;
                       return _regeneratorRuntime().wrap(function _callee6$(_context6) {
                         while (1) switch (_context6.prev = _context6.next) {
                           case 0:
                             amountInput = document.getElementById('amountInput');
+                            _context6.next = 3;
+                            return amountIsValid(amountInput.value);
+                          case 3:
+                            isValidAmount = _context6.sent;
+                            if (isValidAmount) {
+                              _context6.next = 7;
+                              break;
+                            }
+                            amountInput.classList.add('error');
+                            return _context6.abrupt("return");
+                          case 7:
                             memoInput = document.getElementById('memoInput');
-                            _context6.next = 4;
+                            _context6.next = 10;
                             return wallet.postNewInvoice(amountInput.value, memoInput.value);
-                          case 4:
+                          case 10:
                             invoice = _context6.sent;
                             console.log(invoice.payment_request);
-                            _context6.next = 8;
+                            _context6.next = 14;
                             return copyToClipBrd(invoice.payment_request);
-                          case 8:
+                          case 14:
                           case "end":
                             return _context6.stop();
                         }
@@ -607,113 +618,135 @@ var dispCreatetInvBtn = /*#__PURE__*/function () {
   };
 }();
 await dispCreatetInvBtn();
-var dispPayInvBtn = /*#__PURE__*/function () {
-  var _ref9 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee11() {
-    return _regeneratorRuntime().wrap(function _callee11$(_context11) {
-      while (1) switch (_context11.prev = _context11.next) {
+var amountIsValid = /*#__PURE__*/function () {
+  var _ref9 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee9(amount) {
+    return _regeneratorRuntime().wrap(function _callee9$(_context9) {
+      while (1) switch (_context9.prev = _context9.next) {
         case 0:
-          _context11.next = 2;
+          if (!(amount === '' || amount != Number || amount <= 0)) {
+            _context9.next = 4;
+            break;
+          }
+          return _context9.abrupt("return", false);
+        case 4:
+          return _context9.abrupt("return", true);
+        case 5:
+        case "end":
+          return _context9.stop();
+      }
+    }, _callee9);
+  }));
+  return function amountIsValid(_x3) {
+    return _ref9.apply(this, arguments);
+  };
+}();
+var dispPayInvBtn = /*#__PURE__*/function () {
+  var _ref10 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee12() {
+    return _regeneratorRuntime().wrap(function _callee12$(_context12) {
+      while (1) switch (_context12.prev = _context12.next) {
+        case 0:
+          _context12.next = 2;
           return Promise.all(user.wallets.map( /*#__PURE__*/function () {
-            var _ref10 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee10(wallet) {
+            var _ref11 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee11(wallet) {
               var payInvBtn;
-              return _regeneratorRuntime().wrap(function _callee10$(_context10) {
-                while (1) switch (_context10.prev = _context10.next) {
+              return _regeneratorRuntime().wrap(function _callee11$(_context11) {
+                while (1) switch (_context11.prev = _context11.next) {
                   case 0:
                     payInvBtn = document.createElement('button');
                     payInvBtn.innerHTML = "<img src=\"./images/arrow_upward_FILL0_wght400_GRAD0_opsz24.png\" alt=\"pay\">";
                     payInvBtn.classList.add('payInvBtn');
-                    payInvBtn.addEventListener('click', /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee9() {
+                    payInvBtn.addEventListener('click', /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee10() {
                       var invoice, amount;
-                      return _regeneratorRuntime().wrap(function _callee9$(_context9) {
-                        while (1) switch (_context9.prev = _context9.next) {
+                      return _regeneratorRuntime().wrap(function _callee10$(_context10) {
+                        while (1) switch (_context10.prev = _context10.next) {
                           case 0:
-                            _context9.next = 2;
+                            _context10.next = 2;
                             return navigator.clipboard.readText();
                           case 2:
-                            invoice = _context9.sent;
-                            _context9.next = 5;
+                            invoice = _context10.sent;
+                            _context10.next = 5;
                             return wallet.returnInvoiceAmount(invoice);
                           case 5:
-                            amount = _context9.sent;
-                            _context9.next = 8;
+                            amount = _context10.sent;
+                            _context10.next = 8;
                             return wallet.postPayment(invoice);
                           case 8:
                           case "end":
-                            return _context9.stop();
+                            return _context10.stop();
                         }
-                      }, _callee9);
+                      }, _callee10);
                     })));
                     document.getElementById("wallet".concat(wallet.wallet_name.substring(0, 3))).appendChild(payInvBtn);
                   case 5:
                   case "end":
-                    return _context10.stop();
+                    return _context11.stop();
                 }
-              }, _callee10);
+              }, _callee11);
             }));
-            return function (_x3) {
-              return _ref10.apply(this, arguments);
+            return function (_x4) {
+              return _ref11.apply(this, arguments);
             };
           }()));
         case 2:
-        case "end":
-          return _context11.stop();
-      }
-    }, _callee11);
-  }));
-  return function dispPayInvBtn() {
-    return _ref9.apply(this, arguments);
-  };
-}();
-await dispPayInvBtn();
-var handleDateCodes = /*#__PURE__*/function () {
-  var _ref12 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee12(time) {
-    var fmtdTime, fmtdDate;
-    return _regeneratorRuntime().wrap(function _callee12$(_context12) {
-      while (1) switch (_context12.prev = _context12.next) {
-        case 0:
-          time = time * 1000;
-          fmtdTime = new Date(time).toLocaleTimeString();
-          fmtdDate = new Date(time).toLocaleDateString();
-          return _context12.abrupt("return", "".concat(fmtdTime, "<br>").concat(fmtdDate));
-        case 4:
         case "end":
           return _context12.stop();
       }
     }, _callee12);
   }));
-  return function handleDateCodes(_x4) {
-    return _ref12.apply(this, arguments);
+  return function dispPayInvBtn() {
+    return _ref10.apply(this, arguments);
+  };
+}();
+await dispPayInvBtn();
+var handleDateCodes = /*#__PURE__*/function () {
+  var _ref13 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee13(time) {
+    var fmtdTime, fmtdDate;
+    return _regeneratorRuntime().wrap(function _callee13$(_context13) {
+      while (1) switch (_context13.prev = _context13.next) {
+        case 0:
+          time = time * 1000;
+          fmtdTime = new Date(time).toLocaleTimeString();
+          fmtdDate = new Date(time).toLocaleDateString();
+          return _context13.abrupt("return", "".concat(fmtdTime, "<br>").concat(fmtdDate));
+        case 4:
+        case "end":
+          return _context13.stop();
+      }
+    }, _callee13);
+  }));
+  return function handleDateCodes(_x5) {
+    return _ref13.apply(this, arguments);
   };
 }();
 var displayTxHistory = /*#__PURE__*/function () {
-  var _ref13 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee15() {
-    return _regeneratorRuntime().wrap(function _callee15$(_context15) {
-      while (1) switch (_context15.prev = _context15.next) {
+  var _ref14 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee16() {
+    return _regeneratorRuntime().wrap(function _callee16$(_context16) {
+      while (1) switch (_context16.prev = _context16.next) {
         case 0:
-          _context15.next = 2;
+          _context16.next = 2;
           return Promise.all(user.wallets.map( /*#__PURE__*/function () {
-            var _ref14 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee14(wallet) {
+            var _ref15 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee15(wallet) {
               var txEl, transactions;
-              return _regeneratorRuntime().wrap(function _callee14$(_context14) {
-                while (1) switch (_context14.prev = _context14.next) {
+              return _regeneratorRuntime().wrap(function _callee15$(_context15) {
+                while (1) switch (_context15.prev = _context15.next) {
                   case 0:
                     txEl = document.createElement('div');
                     txEl.classList.add('txEl');
-                    _context14.next = 4;
+                    _context15.next = 4;
                     return wallet.getTxHistory();
                   case 4:
-                    transactions = _context14.sent;
-                    _context14.next = 7;
+                    transactions = _context15.sent;
+                    _context15.next = 7;
                     return Promise.all(transactions.map( /*#__PURE__*/function () {
-                      var _ref15 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee13(tx) {
+                      var _ref16 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee14(tx) {
                         var dateTime, txTxt;
-                        return _regeneratorRuntime().wrap(function _callee13$(_context13) {
-                          while (1) switch (_context13.prev = _context13.next) {
+                        return _regeneratorRuntime().wrap(function _callee14$(_context14) {
+                          while (1) switch (_context14.prev = _context14.next) {
                             case 0:
-                              _context13.next = 2;
+                              _context14.next = 2;
                               return handleDateCodes(tx.time);
                             case 2:
-                              dateTime = _context13.sent;
+                              dateTime = _context14.sent;
                               //transaction data to txt   
                               txTxt = document.createElement('p');
                               txTxt.classList.add('txTxt');
@@ -721,201 +754,201 @@ var displayTxHistory = /*#__PURE__*/function () {
                               txEl.appendChild(txTxt);
                             case 7:
                             case "end":
-                              return _context13.stop();
+                              return _context14.stop();
                           }
-                        }, _callee13);
+                        }, _callee14);
                       }));
-                      return function (_x6) {
-                        return _ref15.apply(this, arguments);
+                      return function (_x7) {
+                        return _ref16.apply(this, arguments);
                       };
                     }()));
                   case 7:
                     document.getElementById("wallet".concat(wallet.wallet_name.substring(0, 3))).appendChild(txEl);
                   case 8:
                   case "end":
-                    return _context14.stop();
+                    return _context15.stop();
                 }
-              }, _callee14);
+              }, _callee15);
             }));
-            return function (_x5) {
-              return _ref14.apply(this, arguments);
+            return function (_x6) {
+              return _ref15.apply(this, arguments);
             };
           }()));
         case 2:
-        case "end":
-          return _context15.stop();
-      }
-    }, _callee15);
-  }));
-  return function displayTxHistory() {
-    return _ref13.apply(this, arguments);
-  };
-}();
-await displayTxHistory();
-var returnInvoiceTxt = /*#__PURE__*/function () {
-  var _ref16 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee16(wallet) {
-    var invoiceData, dateTimeTxt, qrCode, invoiceTxt;
-    return _regeneratorRuntime().wrap(function _callee16$(_context16) {
-      while (1) switch (_context16.prev = _context16.next) {
-        case 0:
-          _context16.next = 2;
-          return wallet.decodeInvoice(invoice);
-        case 2:
-          invoiceData = _context16.sent;
-          _context16.next = 5;
-          return handleDateCodes(invoiceData.time);
-        case 5:
-          dateTimeTxt = _context16.sent;
-          _context16.next = 8;
-          return wallet.getQrCode(invoice);
-        case 8:
-          qrCode = _context16.sent;
-          //invoice data to txt
-          invoiceTxt = "".concat(invoiceData.amount, " sats <br>\n        ").concat(dateTimeTxt, " <br>\n        ").concat(qrCode, " <br>");
-        case 10:
         case "end":
           return _context16.stop();
       }
     }, _callee16);
   }));
-  return function returnInvoiceTxt(_x7) {
-    return _ref16.apply(this, arguments);
+  return function displayTxHistory() {
+    return _ref14.apply(this, arguments);
+  };
+}();
+await displayTxHistory();
+var returnInvoiceTxt = /*#__PURE__*/function () {
+  var _ref17 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee17(wallet) {
+    var invoiceData, dateTimeTxt, qrCode, invoiceTxt;
+    return _regeneratorRuntime().wrap(function _callee17$(_context17) {
+      while (1) switch (_context17.prev = _context17.next) {
+        case 0:
+          _context17.next = 2;
+          return wallet.decodeInvoice(invoice);
+        case 2:
+          invoiceData = _context17.sent;
+          _context17.next = 5;
+          return handleDateCodes(invoiceData.time);
+        case 5:
+          dateTimeTxt = _context17.sent;
+          _context17.next = 8;
+          return wallet.getQrCode(invoice);
+        case 8:
+          qrCode = _context17.sent;
+          //invoice data to txt
+          invoiceTxt = "".concat(invoiceData.amount, " sats <br>\n        ").concat(dateTimeTxt, " <br>\n        ").concat(qrCode, " <br>");
+        case 10:
+        case "end":
+          return _context17.stop();
+      }
+    }, _callee17);
+  }));
+  return function returnInvoiceTxt(_x8) {
+    return _ref17.apply(this, arguments);
   };
 }();
 
 //closetBtn for pop ups
 var appendClsBtn = /*#__PURE__*/function () {
-  var _ref17 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee18(elIdToRemove) {
+  var _ref18 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee19(elIdToRemove) {
     var toBeRemoved, clsBtn;
-    return _regeneratorRuntime().wrap(function _callee18$(_context18) {
-      while (1) switch (_context18.prev = _context18.next) {
+    return _regeneratorRuntime().wrap(function _callee19$(_context19) {
+      while (1) switch (_context19.prev = _context19.next) {
         case 0:
           toBeRemoved = document.getElementById(elIdToRemove);
           clsBtn = document.createElement('button');
           clsBtn.classList.add('clsBtn');
           clsBtn.textContent = 'X';
-          clsBtn.addEventListener('click', /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee17() {
-            return _regeneratorRuntime().wrap(function _callee17$(_context17) {
-              while (1) switch (_context17.prev = _context17.next) {
+          clsBtn.addEventListener('click', /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee18() {
+            return _regeneratorRuntime().wrap(function _callee18$(_context18) {
+              while (1) switch (_context18.prev = _context18.next) {
                 case 0:
                   toBeRemoved.remove();
                 case 1:
                 case "end":
-                  return _context17.stop();
+                  return _context18.stop();
               }
-            }, _callee17);
+            }, _callee18);
           })));
           toBeRemoved.appendChild(clsBtn);
         case 6:
         case "end":
-          return _context18.stop();
+          return _context19.stop();
       }
-    }, _callee18);
+    }, _callee19);
   }));
-  return function appendClsBtn(_x8) {
-    return _ref17.apply(this, arguments);
+  return function appendClsBtn(_x9) {
+    return _ref18.apply(this, arguments);
   };
 }();
 //paste invoice btn
 var handlePasteInvoice = /*#__PURE__*/function () {
-  var _ref19 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee20(wallet) {
+  var _ref20 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee21(wallet) {
     var containerDiv, pasteInvoiceBtn, invoice;
-    return _regeneratorRuntime().wrap(function _callee20$(_context20) {
-      while (1) switch (_context20.prev = _context20.next) {
+    return _regeneratorRuntime().wrap(function _callee21$(_context21) {
+      while (1) switch (_context21.prev = _context21.next) {
         case 0:
           containerDiv = document.getElementById('container');
           pasteInvoiceBtn = document.createElement('button');
           pasteInvoiceBtn.textContent = 'Paste Invoice';
 
           //onclick auto paste from clipboard
-          _context20.next = 5;
+          _context21.next = 5;
           return navigator.clipboard.readText();
         case 5:
-          invoice = _context20.sent;
-          pasteInvoiceBtn.addEventListener('click', /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee19() {
-            return _regeneratorRuntime().wrap(function _callee19$(_context19) {
-              while (1) switch (_context19.prev = _context19.next) {
+          invoice = _context21.sent;
+          pasteInvoiceBtn.addEventListener('click', /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee20() {
+            return _regeneratorRuntime().wrap(function _callee20$(_context20) {
+              while (1) switch (_context20.prev = _context20.next) {
                 case 0:
-                  _context19.next = 2;
+                  _context20.next = 2;
                   return wallet.postPayment(invoice);
                 case 2:
-                  _context19.t0 = console;
-                  _context19.next = 5;
+                  _context20.t0 = console;
+                  _context20.next = 5;
                   return wallet.returnInvoiceAmount(invoice);
                 case 5:
-                  _context19.t1 = _context19.sent;
-                  _context19.t0.log.call(_context19.t0, _context19.t1);
+                  _context20.t1 = _context20.sent;
+                  _context20.t0.log.call(_context20.t0, _context20.t1);
                 case 7:
                 case "end":
-                  return _context19.stop();
+                  return _context20.stop();
               }
-            }, _callee19);
+            }, _callee20);
           })));
           containerDiv.appendChild(pasteInvoiceBtn);
         case 8:
-        case "end":
-          return _context20.stop();
-      }
-    }, _callee20);
-  }));
-  return function handlePasteInvoice(_x9) {
-    return _ref19.apply(this, arguments);
-  };
-}();
-
-//footer
-var displayFooter = /*#__PURE__*/function () {
-  var _ref21 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee21() {
-    return _regeneratorRuntime().wrap(function _callee21$(_context21) {
-      while (1) switch (_context21.prev = _context21.next) {
-        case 0:
-          _context21.t0 = "Interface by dielawn, Powered by LNBits <br> BTC $";
-          _context21.next = 3;
-          return user.getBtcUsdPrice();
-        case 3:
-          _context21.t1 = _context21.sent;
-          document.getElementById('footer').innerHTML = _context21.t0.concat.call(_context21.t0, _context21.t1);
-        case 5:
         case "end":
           return _context21.stop();
       }
     }, _callee21);
   }));
+  return function handlePasteInvoice(_x10) {
+    return _ref20.apply(this, arguments);
+  };
+}();
+
+//footer
+var displayFooter = /*#__PURE__*/function () {
+  var _ref22 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee22() {
+    return _regeneratorRuntime().wrap(function _callee22$(_context22) {
+      while (1) switch (_context22.prev = _context22.next) {
+        case 0:
+          _context22.t0 = "Interface by dielawn, Powered by LNBits <br> BTC $";
+          _context22.next = 3;
+          return user.getBtcUsdPrice();
+        case 3:
+          _context22.t1 = _context22.sent;
+          document.getElementById('footer').innerHTML = _context22.t0.concat.call(_context22.t0, _context22.t1);
+        case 5:
+        case "end":
+          return _context22.stop();
+      }
+    }, _callee22);
+  }));
   return function displayFooter() {
-    return _ref21.apply(this, arguments);
+    return _ref22.apply(this, arguments);
   };
 }();
 
 //tools 
 
 var copyToClipBrd = /*#__PURE__*/function () {
-  var _ref22 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee22(text) {
-    return _regeneratorRuntime().wrap(function _callee22$(_context22) {
-      while (1) switch (_context22.prev = _context22.next) {
+  var _ref23 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee23(text) {
+    return _regeneratorRuntime().wrap(function _callee23$(_context23) {
+      while (1) switch (_context23.prev = _context23.next) {
         case 0:
           if (!navigator.clipboard) {
-            _context22.next = 5;
+            _context23.next = 5;
             break;
           }
-          _context22.next = 3;
+          _context23.next = 3;
           return navigator.clipboard.writeText(text).then(function () {
             return 'Copied to clipboard!';
           })["catch"](function () {
             return 'Unable to copy to clipboard';
           });
         case 3:
-          _context22.next = 6;
+          _context23.next = 6;
           break;
         case 5:
-          return _context22.abrupt("return", 'Clipboard API not supported');
+          return _context23.abrupt("return", 'Clipboard API not supported');
         case 6:
         case "end":
-          return _context22.stop();
+          return _context23.stop();
       }
-    }, _callee22);
+    }, _callee23);
   }));
-  return function copyToClipBrd(_x10) {
-    return _ref22.apply(this, arguments);
+  return function copyToClipBrd(_x11) {
+    return _ref23.apply(this, arguments);
   };
 }();
 
@@ -925,31 +958,31 @@ var abrvHash = function abrvHash(hash, startEnd) {
 };
 await displayFooter();
 var app = /*#__PURE__*/function () {
-  var _ref23 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee23() {
-    return _regeneratorRuntime().wrap(function _callee23$(_context23) {
-      while (1) switch (_context23.prev = _context23.next) {
+  var _ref24 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee24() {
+    return _regeneratorRuntime().wrap(function _callee24$(_context24) {
+      while (1) switch (_context24.prev = _context24.next) {
         case 0:
           setTimeout(function () {
             app();
           }, 10000);
         case 1:
         case "end":
-          return _context23.stop();
+          return _context24.stop();
       }
-    }, _callee23);
+    }, _callee24);
   }));
   return function app() {
-    return _ref23.apply(this, arguments);
+    return _ref24.apply(this, arguments);
   };
 }();
-document.addEventListener('click', /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee24() {
-  return _regeneratorRuntime().wrap(function _callee24$(_context24) {
-    while (1) switch (_context24.prev = _context24.next) {
+document.addEventListener('click', /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee25() {
+  return _regeneratorRuntime().wrap(function _callee25$(_context25) {
+    while (1) switch (_context25.prev = _context25.next) {
       case 0:
       case "end":
-        return _context24.stop();
+        return _context25.stop();
     }
-  }, _callee24);
+  }, _callee25);
 })));
 __webpack_async_result__();
 } catch(e) { __webpack_async_result__(e); } }, 1);

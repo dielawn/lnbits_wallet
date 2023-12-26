@@ -21,7 +21,7 @@ const initializeUser = async () => {
 await initializeUser()
 
 const displayHeader = async () => {
-    document.getElementById('header').innerHTML = `${await user.sumBalances()}`
+    document.getElementById('header').innerHTML = `${await user.sumBalances()} sats`
 }
 await displayHeader()
 
@@ -47,7 +47,12 @@ const dispCreatetInvBtn = async () => {
             newInvBtn.innerHTML = ` <img src="../images/arrow_downward_FILL0_wght400_GRAD0_opsz24.png" alt="deposit">`
     
             newInvBtn.addEventListener('click', async () => {
-                const amountInput = document.getElementById('amountInput')           
+                const amountInput = document.getElementById('amountInput')    
+                const isValidAmount = await amountIsValid(amountInput.value)   
+                if(!isValidAmount) {
+                    amountInput.classList.add('error')
+                    return   
+                }    
                 const memoInput = document.getElementById('memoInput')
                 const invoice = await wallet.postNewInvoice(amountInput.value, memoInput.value)
                 console.log(invoice.payment_request)
@@ -59,6 +64,13 @@ const dispCreatetInvBtn = async () => {
     )
 }
 await dispCreatetInvBtn()
+
+const amountIsValid = async (amount) => {
+    if (amount === '' || amount != Number || amount <= 0) {
+        return false
+    } else
+    return true
+};
 
 const dispPayInvBtn = async () => {
     await Promise.all(

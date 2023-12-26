@@ -40,7 +40,7 @@ body {
 .newInvBtn,
 .payInvBtn {
     padding: 25px;
-    width: 200px;
+    width: 150px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
     border: none;
     background-color: rgba(245, 245, 245, 0.487);
@@ -57,7 +57,7 @@ button {
     height: 40vh;    
     display: flex;
     flex-wrap: nowrap;
-    justify-content: center;
+    justify-content: flex-start;
     align-content: center;
     align-items: center;
 }
@@ -67,11 +67,12 @@ button {
     overflow: hidden;
     min-width: 300px;
     height: 300px;
-    margin: 50px;
+    margin: 25px;
     display: flex;
     justify-content: center;
     align-items: center;
     background-color: rgba(245, 245, 245, 0.487);
+    font-size: .9em;
 }
 .walletsDiv {
     padding: 10px;
@@ -81,9 +82,14 @@ button {
 .walletDiv {
     padding: 10px;
     box-shadow: 0 8px 20px 0 rgba(0, 0, 0, .5);
-    width: 45%;
+    width: 34%;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
     background-color: rgba(245, 245, 245, 0.263);
+    font-size: 2rem;
 }
+.error{
+    outline: solid red 3px;
+}
+
