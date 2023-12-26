@@ -3,3 +3,53 @@
     padding: 0;
     box-sizing: border-box;
 }
+.container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+   grid-template-rows: repeat(auto, auto);
+}
+h3 {
+    width: fit-content;
+}
+.header {
+    width: 100%;
+    grid-column: 1 / 3;
+    text-align: end;
+}
+.infoDiv {
+    display: flex;
+    grid-column: 1/3;
+    grid-row: 2/3;
+   
+}
+.newInvButton {
+    width: 150px;
+}
+.txDiv {
+    border: solid 1px black;
+    width: 100%;
+}
+.txHistoryDiv {
+border: solid 3px aqua;
+grid-row: 3/4;
+grid-column: 1/3;
+position: relative;
+display: flex;
+}
+.walletInfoDiv {
+    border: solid 2px pink;
+    height: 300px;
+    overflow: scroll;
+    width: 50%;
+   
+    
+}
+.walletsDiv{
+ display: flex;
+    border: solid 1px black;
+    background-color: aquamarine;
+    width: 100vw;
+    
+
+}
+

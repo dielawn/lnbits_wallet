@@ -5,159 +5,91 @@ import { WALLETS } from "./config.js"
 const user = new User()
 //INITIALIZATION
 const initializeUser = async () => {
+    user.wallets.length = 0
     //wallets keys saved in config.js include config.js in .gitignore
     const loadWallets = async () => {
         for (let i = 0; i < WALLETS.length; i++) {
             await user.addWallet(WALLETS[i].ID, WALLETS[i].ADMIN_KEY, WALLETS[i].INV_KEY, WALLETS[i].WALLET_NAME)
             await user.wallets[i].initialize()
-    }
-}
-    //load wallet to user.wallets
-    await loadWallets()
-    //set first wallet to user.currentWallet as default
-    await user.setCurrentWallet(0)
+            }
+        }
+        await loadWallets() //wallet object to user.wallets
+    
     console.log('user:', user)
+    console.log(user.wallets.length)
 }
+
 await initializeUser()
-//DATA TO VARIABLES
-
-//balance of selected wallet
-const balance = await user.currentWallet.getBalance().then(total => {
-    return total
-})
-console.log('Current wallet balance', balance)
-
-//btc usd price
-const btcUsdPrice = await user.getBtcUsdPrice()
-console.log('BTC/usd', btcUsdPrice)
-
-//current wallet balance
-const wallet = await user.currentWallet.wallet_name
-console.log('Current wallet name:', wallet)
-
-
-
-
-
 // sum balance of each wallet
-const displayWalletsSum = async () => {
-    const containerDiv = document.getElementById('container')
-    const totalDiv = document.createElement('div')
+const walletsSum = `${await user.sumBalances()}`
+console.log('walletSum', walletsSum)
 
-    const totalBalance = await user.sumBalances().then(total => {
-        return  total
-     })
-    user.totalBalance = totalBalance
-    
-    const balanceEl = document.createElement('h3')
-    balanceEl.innerHTML = `Total: ${totalBalance}sats`
-
-    totalDiv.appendChild(balanceEl)
-
-    containerDiv.appendChild(totalDiv)
-}
-
-
-//pseudo DOM stuff
-
-//display balance and name of each wallet
-const balanceOfEach = async () => {
-        const containerDiv = document.getElementById('container')
-        user.wallets.forEach(wallet => {  
-            //clickable wallet cards to set wallet keys
-            const infoDiv = document.createElement('div')
-            infoDiv.addEventListener('click', async () => {
-                user.currentWallet = wallet
-                await displayTxHistory()
-            })
-            //wallet names and balances
-            const walletInfo = document.createElement('h3') 
-            walletInfo.innerHTML =  `${wallet.wallet_name}:<br>${wallet.balance} sasts`  
-            
-            infoDiv.appendChild(walletInfo) 
-            containerDiv.appendChild(infoDiv)
-        })        
-    }    
-    
-//display tx history in expandable window 
-const displayTxHistory = async () => {
-    const containerDiv = document.getElementById('container')
-    const transactions = await user.currentWallet.getTxHistory()
-    transactions.forEach(async tx => {
-        const txDiv = document.createElement('div')
-        txDiv.classList.add('txDiv')
-
-            const amountEl = document.createElement('p')
-            amountEl.innerHTML = `${tx.amount / 1000}sats`
-            
-            const feeEl = document.createElement('p')
-            feeEl.innerHTML = `Fee: ${tx.fee} mSats`
-
-            const memoEl = document.createElement('p')
-            memoEl.innerHTML =  `Memo: ${tx.memo}`
-            
-            const bolt11El = document.createElement('p')
-            const hash =  tx.bolt11
-            bolt11El.innerHTML = `${abrvHash(hash, 11)}`
-            
-            const dateTimeEl = document.createElement('p')   
-            dateTimeEl.innerHTML = await handleDateCodes(tx.time)    
-
-            const expiryEl = document.createElement('p')
-            expiryEl.innerHTML = await handleDateCodes(tx.expiry)
-          
-        txDiv.appendChild(amountEl)
-        txDiv.appendChild(feeEl)
-        txDiv.appendChild(memoEl)
-        txDiv.appendChild(bolt11El)
-        txDiv.appendChild(dateTimeEl)
-        txDiv.appendChild(expiryEl)
-        
-        containerDiv.appendChild(txDiv)
+const nameBalanceTxt = await Promise.all(
+    user.wallets.map(async (wallet) => {
+        //name and balance
+        return `${wallet.wallet_name}: ${wallet.balance} sats` 
     })
+)
+console.log(nameBalanceTxt.join('\n'))
+
+
+const handleDateCodes = async (time) => {
+    time = time * 1000
+    const fmtdTime = new Date(time).toLocaleTimeString()
+    const fmtdDate = new Date(time).toLocaleDateString()
+    return `${fmtdTime} ${fmtdDate}`
 }
-//filter data
-//download to csv
+
+const returnTxHisoryTxt = await Promise.all(
+    user.wallets.map(async (wallet) => {
+        //tx history
+        const transactions = await wallet.getTxHistory()    
+        const txTxt = await Promise.all(
+            transactions.map(async (tx) => {       
+                const dateTime = await handleDateCodes(tx.time)          
+                //transaction data to txt   
+                return `${wallet.wallet_name}:
+${tx.amount / 1000} sats
+Fee: ${tx.fee} mSats
+Memo: ${tx.memo}         
+${dateTime}`   
+                   
+            })
+        ) 
+        return txTxt.join('\n\n')
+    })
+)
+console.log(returnTxHisoryTxt.join('\n\n\n'))
 
 
-
-//invoice popup:
-const displayInvoice = async (invoice) => {
-
-    const prevInvoice = document.querySelectorAll('.invoiceDiv')
-    if(prevInvoice){
-        prevInvoice.remove()
-    }
-
-    const containerDiv = document.getElementById('container')
-    const invoiceDiv = document.createElement('div')
-    invoiceDiv.id = 'invoiceDiv'
-    invoiceDiv.classList.add('invoiceDiv')
-    //decodes
-    const invoiceData = await user.currentWallet.decodeInvoice(invoice)
-    //displays invoice amount
-    const amountEl = document.createElement('p')
-    amountEl.innerHTML = `${invoiceData.amount}sats`
-    //displays invoice creation time
-    const dateTimeEl = document.createElement('p')
-    dateTimeEl.innerHTML = await handleDateCodes(invoiceData.time)
-    //displays unique qr code for air gaped payments
-    const qrEl = document.createElement('div')
-    qrEl.innerHTML = await user.currentWallet.getQrCode(invoice)
-
-     //options:
-        //btn that copies invoice to clipboard for new invoices
-        //pay/cancel btns for paste invoice
-        //no btns for decoded invoice
+const returnInvoiceTxt = async (wallet) => {
+        //invoice data
+        const invoiceData = await wallet.decodeInvoice(invoice)
+        const dateTimeTxt = await handleDateCodes(invoiceData.time)
+        const qrCode = await wallet.getQrCode(invoice)
+        //invoice data to txt
+        const invoiceTxt = 
+        `${invoiceData.amount} sats <br>
+        ${dateTimeTxt} <br>
+        ${qrCode} <br>`
+        
+}
+//new invoice btn 
+const openInvFrmBtn = async (wallet) => {
+ 
+    const infoDiv = document.getElementById(`infoDiv${wallet.wallet_name.substring(0, 3)}`)
     
-    await appendClsBtn('invoiceDiv')
-    invoiceDiv.appendChild(amountEl)
-    invoiceDiv.appendChild(dateTimeEl)
-    invoiceDiv.appendChild(qrEl)
+    const newInvBtn = document.createElement('button')
+    newInvBtn.classList.add('newInvBtn')
+    newInvBtn.textContent = `Create ${wallet.wallet_name} Invoice`
+    newInvBtn.addEventListener('click', async () => {
+    //inputs popup: 
+    await displayInvoiceInputs()
+})    
 
-    containerDiv.appendChild(invoiceDiv)
-} 
-
+infoDiv.appendChild(newInvBtn)
+}
+    
 //closetBtn for pop ups
 const appendClsBtn = async (elIdToRemove) => {
 
@@ -171,84 +103,8 @@ const appendClsBtn = async (elIdToRemove) => {
     toBeRemoved.appendChild(clsBtn)
 
 }
-
-//make hash display shorter
-const abrvHash = (hash, startEnd) => {
-    return `${hash.substring(0, startEnd)}...${hash.substring(hash.length - startEnd, hash.length)}`
- }
- 
- const handleDateCodes = async (time) => {
-         time = time * 1000
-         const fmtdTime = new Date(time).toLocaleTimeString()
-         const fmtdDate = new Date(time).toLocaleDateString()
-         return `${fmtdTime}<br>${fmtdDate}`
- }
-   
-const copyToClipBrd = async (text) => {
-    if(navigator.clipboard) {
-        await navigator.clipboard.writeText(text)
-        .then(() => 'Copied to clipboard!')
-        .catch(() => 'Unable to copy to clipboard')
-    } else return 'Clipboard API not supported'
-}
-
-const pasteFromClipBrd = async () => {
-    if(navigator.clipboard) {
-        await navigator.clipboard.readText()
-        .then(() => 'Paste sucessful')
-        .catch(() => 'Paste failed')
-    } else return 'Clipboard API not supported'
-}
-//new invoice btn 
-const openNewInvBtn = async () => {
-    const containerDiv = document.getElementById('container')
-    const newInvBtn = document.createElement('button')
-    newInvBtn.textContent = 'Create Invoice'
-    newInvBtn.addEventListener('click', async () => {
-        //inputs popup: 
-        await displayInvoiceInputs()
-    })    
-
-    containerDiv.appendChild(newInvBtn)
-}
-
-const displayInvoiceInputs = async () => {
-    const containerDiv = document.getElementById('div')
-         
-    const newInvoiceDiv = document.createElement('div')
-    newInvoiceDiv.id = 'newInvoiceDiv'
-    //2 inputs
-    //input1 = amount
-    const amountInput = document.createElement('input')
-    amountInput.placeholder = 'Amount in sats'
-    //input2 = memo
-    const memoInput = document.createElement('input')
-    memoInput.placeholder = 'Memo'
-    //submits input data returns invoice
-    const submitBtn = document.createElement('button')
-    submitBtn.textContent = 'Create Invoice'
-
-    let invoice =  await user.currentWallet.postNewInvoice(amountInput.value, memoInput.value)
-    submitBtn.addEventListener('click', async () => {
-        // remove input div
-        document.getElementById('newInvoiceDiv').remove()
-        //open pay invoice 
-        await displayInvoice(invoice)
-        //auto copy invoice to clipboard
-        await copyToClipBrd(invoice)
-    })
-
-    await appendClsBtn("newInvoiceDiv")
-    newInvoiceDiv.appendChild(amountInput)
-    newInvoiceDiv.appendChild(memoInput)
-    newInvoiceDiv.appendChild(submitBtn)
-
-    containerDiv.appendChild(newInvoiceDiv)
-}
-
-
 //paste invoice btn
-const handlePasteInvoice = async () => {
+const handlePasteInvoice = async (wallet) => {
     const containerDiv = document.getElementById('container')
 
     const pasteInvoiceBtn = document.createElement('button')
@@ -257,32 +113,59 @@ const handlePasteInvoice = async () => {
     //onclick auto paste from clipboard
     const invoice = await pasteFromClipBrd()
     pasteInvoiceBtn.addEventListener('click', async () => {
-        await user.currentWallet.postPayment(invoice)
-        await user.currentWallet.decodeInvoice(invoice)
+        await wallet.postPayment(invoice)
+        await wallet.decodeInvoice(invoice)
     })
 
+    containerDiv.appendChild(pasteInvoiceBtn)
+
 }
 
-//pending??
-//on sucessful decode display decoded invoice popup
-//on failure display error
-//confirmation cancel btns
+//footer
+const displayFooter = async () => {
+    // const prevInfo = document.querySelectorAll('.footer')
+    // if (prevInfo) {
+    //     prevInfo.forEach((el) => {
+    //         el.remove()
+    //     })        
+    // }
+    //btc usd price
+    const btcUsdPrice = await user.getBtcUsdPrice()
+    const footerEl = document.getElementById('footer')
+    footerEl.innerHTML = `Interface by dielawn, Powered by LNBits <br> BTC $${btcUsdPrice} usd`
 
-//decode invoice btn
-//displays invoice popup
-
-//new wallet btn
-//popup input = wallet name
-//submit btn
-//close btn
-
-
-    await balanceOfEach()
-    await displayWalletsSum()
-    await displayTxHistory()
-
-
-
-export {
-    user
 }
+
+//tools 
+
+const copyToClipBrd = async (text) => {
+if(navigator.clipboard) {
+   await navigator.clipboard.writeText(text)
+   .then(() => 'Copied to clipboard!')
+   .catch(() => 'Unable to copy to clipboard')
+} else return 'Clipboard API not supported'
+}
+
+const pasteFromClipBrd = async () => {
+if(navigator.clipboard) {
+   await navigator.clipboard.readText()
+   .then(() => 'Paste sucessful')
+   .catch(() => 'Paste failed')
+} else return 'Clipboard API not supported'
+}
+//display shorter hash
+const abrvHash = (hash, startEnd) => {
+    return `${hash.substring(0, startEnd)}...${hash.substring(hash.length - startEnd, hash.length)}`
+ }
+
+
+
+const app = async () => {      
+    
+    setTimeout(() => {app()}, 10000)
+}
+
+document.addEventListener('click', async () => {
+    // app()  
+})
+

@@ -27,7 +27,7 @@ export class User {
     }
     initialize = async () => {
         this.totalBalance = await this.sumBalances().then(total => {
-            return total
+            this.totalBalance = total
         })
     }
     getBtcUsdPrice = async () => {
