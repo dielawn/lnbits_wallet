@@ -498,7 +498,7 @@ var displayHeader = /*#__PURE__*/function () {
           return user.sumBalances();
         case 3:
           _context3.t1 = _context3.sent;
-          document.getElementById('header').innerHTML = _context3.t0.concat.call(_context3.t0, _context3.t1, " sats");
+          document.getElementById('header').innerHTML = _context3.t0.concat.call(_context3.t0, _context3.t1, " <span class=\"icon-Bitcoin-Lightning-Gray icon-lg\"></span>");
         case 5:
         case "end":
           return _context3.stop();
@@ -566,31 +566,21 @@ var dispCreatetInvBtn = /*#__PURE__*/function () {
                     newInvBtn.classList.add('newInvBtn');
                     newInvBtn.innerHTML = " <img src=\"../images/arrow_downward_FILL0_wght400_GRAD0_opsz24.png\" alt=\"deposit\">";
                     newInvBtn.addEventListener('click', /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6() {
-                      var amountInput, isValidAmount, memoInput, invoice;
+                      var amountInput, memoInput, invoice;
                       return _regeneratorRuntime().wrap(function _callee6$(_context6) {
                         while (1) switch (_context6.prev = _context6.next) {
                           case 0:
+                            console.log('clicked it');
                             amountInput = document.getElementById('amountInput');
-                            _context6.next = 3;
-                            return amountIsValid(amountInput.value);
-                          case 3:
-                            isValidAmount = _context6.sent;
-                            if (isValidAmount) {
-                              _context6.next = 7;
-                              break;
-                            }
-                            amountInput.classList.add('error');
-                            return _context6.abrupt("return");
-                          case 7:
                             memoInput = document.getElementById('memoInput');
-                            _context6.next = 10;
+                            _context6.next = 5;
                             return wallet.postNewInvoice(amountInput.value, memoInput.value);
-                          case 10:
+                          case 5:
                             invoice = _context6.sent;
                             console.log(invoice.payment_request);
-                            _context6.next = 14;
+                            _context6.next = 9;
                             return copyToClipBrd(invoice.payment_request);
-                          case 14:
+                          case 9:
                           case "end":
                             return _context6.stop();
                         }
@@ -902,7 +892,7 @@ var displayFooter = /*#__PURE__*/function () {
     return _regeneratorRuntime().wrap(function _callee22$(_context22) {
       while (1) switch (_context22.prev = _context22.next) {
         case 0:
-          _context22.t0 = "Interface by dielawn, Powered by LNBits <br> BTC $";
+          _context22.t0 = "<span class=\"icon-Bitcoin-Lightning-Gold icon-lg\"></span>Interface by dielawn, Powered by LNBits <br> BTC $";
           _context22.next = 3;
           return user.getBtcUsdPrice();
         case 3:

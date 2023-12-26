@@ -21,7 +21,8 @@ const initializeUser = async () => {
 await initializeUser()
 
 const displayHeader = async () => {
-    document.getElementById('header').innerHTML = `${await user.sumBalances()} sats`
+    
+    document.getElementById('header').innerHTML = `${await user.sumBalances()} <span class="icon-Bitcoin-Lightning-Gray icon-lg"></span>`
 }
 await displayHeader()
 
@@ -47,12 +48,10 @@ const dispCreatetInvBtn = async () => {
             newInvBtn.innerHTML = ` <img src="../images/arrow_downward_FILL0_wght400_GRAD0_opsz24.png" alt="deposit">`
     
             newInvBtn.addEventListener('click', async () => {
+                console.log('clicked it')
                 const amountInput = document.getElementById('amountInput')    
-                const isValidAmount = await amountIsValid(amountInput.value)   
-                if(!isValidAmount) {
-                    amountInput.classList.add('error')
-                    return   
-                }    
+                
+
                 const memoInput = document.getElementById('memoInput')
                 const invoice = await wallet.postNewInvoice(amountInput.value, memoInput.value)
                 console.log(invoice.payment_request)
@@ -167,7 +166,7 @@ const handlePasteInvoice = async (wallet) => {
 
 //footer
 const displayFooter = async () => {
-    document.getElementById('footer').innerHTML = `Interface by dielawn, Powered by LNBits <br> BTC $${await user.getBtcUsdPrice()}`
+    document.getElementById('footer').innerHTML = `<span class="icon-Bitcoin-Lightning-Gold icon-lg"></span>Interface by dielawn, Powered by LNBits <br> BTC $${await user.getBtcUsdPrice()}`
 }
 
 //tools 
