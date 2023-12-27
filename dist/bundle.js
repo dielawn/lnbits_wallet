@@ -564,7 +564,7 @@ var dispCreatetInvBtn = /*#__PURE__*/function () {
                   case 0:
                     newInvBtn = document.createElement('button');
                     newInvBtn.classList.add('newInvBtn');
-                    newInvBtn.innerHTML = " <img src=\"../images/arrow_downward_FILL0_wght400_GRAD0_opsz24.png\" alt=\"deposit\">";
+                    newInvBtn.innerHTML = " <span class=\"material-symbols-outlined\">arrow_upward</span>";
                     newInvBtn.addEventListener('click', /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6() {
                       var amountInput, memoInput, invoice;
                       return _regeneratorRuntime().wrap(function _callee6$(_context6) {
@@ -643,7 +643,7 @@ var dispPayInvBtn = /*#__PURE__*/function () {
                 while (1) switch (_context11.prev = _context11.next) {
                   case 0:
                     payInvBtn = document.createElement('button');
-                    payInvBtn.innerHTML = "<img src=\"./images/arrow_upward_FILL0_wght400_GRAD0_opsz24.png\" alt=\"pay\">";
+                    payInvBtn.innerHTML = "<span class=\"material-symbols-outlined\">arrow_upward</span>";
                     payInvBtn.classList.add('payInvBtn');
                     payInvBtn.addEventListener('click', /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee10() {
                       var invoice, amount;
@@ -892,7 +892,7 @@ var displayFooter = /*#__PURE__*/function () {
     return _regeneratorRuntime().wrap(function _callee22$(_context22) {
       while (1) switch (_context22.prev = _context22.next) {
         case 0:
-          _context22.t0 = "<span class=\"icon-Bitcoin-Lightning-Gold icon-lg\"></span>Interface by dielawn, Powered by LNBits <br> BTC $";
+          _context22.t0 = "Interface by dielawn, Powered by LNBits <br> <span class=\"icon-Bitcoin-Lightning-White icon-lg\"></span>";
           _context22.next = 3;
           return user.getBtcUsdPrice();
         case 3:

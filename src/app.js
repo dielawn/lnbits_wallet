@@ -45,7 +45,7 @@ const dispCreatetInvBtn = async () => {
         user.wallets.map(async (wallet) => {
             const newInvBtn = document.createElement('button')
             newInvBtn.classList.add('newInvBtn')
-            newInvBtn.innerHTML = ` <img src="../images/arrow_downward_FILL0_wght400_GRAD0_opsz24.png" alt="deposit">`
+            newInvBtn.innerHTML = ` <span class="material-symbols-outlined">arrow_upward</span>`
     
             newInvBtn.addEventListener('click', async () => {
                 console.log('clicked it')
@@ -75,7 +75,7 @@ const dispPayInvBtn = async () => {
     await Promise.all(
         user.wallets.map(async (wallet) => {
             const payInvBtn = document.createElement('button')
-            payInvBtn.innerHTML = `<img src="./images/arrow_upward_FILL0_wght400_GRAD0_opsz24.png" alt="pay">`
+            payInvBtn.innerHTML = `<span class="material-symbols-outlined">arrow_upward</span>`
             payInvBtn.classList.add('payInvBtn')
             payInvBtn.addEventListener('click', async () => {
                 const invoice = await navigator.clipboard.readText()
@@ -166,7 +166,7 @@ const handlePasteInvoice = async (wallet) => {
 
 //footer
 const displayFooter = async () => {
-    document.getElementById('footer').innerHTML = `<span class="icon-Bitcoin-Lightning-Gold icon-lg"></span>Interface by dielawn, Powered by LNBits <br> BTC $${await user.getBtcUsdPrice()}`
+    document.getElementById('footer').innerHTML = `Interface by dielawn, Powered by LNBits <br> <span class="icon-Bitcoin-Lightning-White icon-lg"></span>${await user.getBtcUsdPrice()}`
 }
 
 //tools 
