@@ -23,9 +23,7 @@ await initializeUser()
 const displayHeader = async () => {
     
     document.getElementById('header').innerHTML = `${await user.sumBalances()} 
-    <span class="icon-Bitcoin-Lightning-Gray icon-lg"></span><span class="material-symbols-outlined menuIcon">
-    menu
-    </span>`
+    <span class="icon-Bitcoin-Lightning-Gray icon-lg"></span><button class="material-symbols-outlined menuBtn menuIcon">menu</button>`
 }
 await displayHeader()
 
@@ -35,7 +33,7 @@ const openClsMenu = async () => {
 
     const menuList = ['Decode', 'New Wallet', 'Cashu']
     for(let i = 0; i < menuList.length; i++) {
-        const menuItem = document.createElement('p')
+        const menuItem = document.createElement('button')
         menuItem.innerText = menuList[i]
         menuItem.classList.add('menuItem')
         menuItem.id = `menuItem${i}`
@@ -43,7 +41,7 @@ const openClsMenu = async () => {
     }
     document.getElementById('header').appendChild(menuDiv)
     menuDiv.classList.toggle('hide')
-    document.querySelector('.menuIcon').addEventListener('click', async () => {
+    document.querySelector('.menuBtn').addEventListener('click', async () => {
         menuDiv.classList.toggle('hide')
     })
 }
@@ -224,7 +222,7 @@ const appendClsBtn = async (elIdToRemove) => {
     const toBeRemoved = document.getElementById(elIdToRemove)
     const clsBtn = document.createElement('button')
     clsBtn.classList.add('clsBtn')
-    clsBtn.textContent = 'X'
+    clsBtn.innerHTML = `<span class="material-symbols-outlined" >close</span>`
     clsBtn.addEventListener('click', async () => {
         toBeRemoved.innerHTML = ''
         toBeRemoved.classList.replace('flex', 'hide')

@@ -498,7 +498,7 @@ var displayHeader = /*#__PURE__*/function () {
           return user.sumBalances();
         case 3:
           _context3.t1 = _context3.sent;
-          document.getElementById('header').innerHTML = _context3.t0.concat.call(_context3.t0, _context3.t1, " \n    <span class=\"icon-Bitcoin-Lightning-Gray icon-lg\"></span><span class=\"material-symbols-outlined menuIcon\">\n    menu\n    </span>");
+          document.getElementById('header').innerHTML = _context3.t0.concat.call(_context3.t0, _context3.t1, " \n    <span class=\"icon-Bitcoin-Lightning-Gray icon-lg\"></span><button class=\"material-symbols-outlined menuBtn menuIcon\">menu</button>");
         case 5:
         case "end":
           return _context3.stop();
@@ -520,7 +520,7 @@ var openClsMenu = /*#__PURE__*/function () {
           menuDiv.classList.add('menuDiv');
           menuList = ['Decode', 'New Wallet', 'Cashu'];
           for (i = 0; i < menuList.length; i++) {
-            menuItem = document.createElement('p');
+            menuItem = document.createElement('button');
             menuItem.innerText = menuList[i];
             menuItem.classList.add('menuItem');
             menuItem.id = "menuItem".concat(i);
@@ -528,7 +528,7 @@ var openClsMenu = /*#__PURE__*/function () {
           }
           document.getElementById('header').appendChild(menuDiv);
           menuDiv.classList.toggle('hide');
-          document.querySelector('.menuIcon').addEventListener('click', /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
+          document.querySelector('.menuBtn').addEventListener('click', /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
             return _regeneratorRuntime().wrap(function _callee4$(_context4) {
               while (1) switch (_context4.prev = _context4.next) {
                 case 0:
@@ -997,14 +997,15 @@ var appendClsBtn = /*#__PURE__*/function () {
           toBeRemoved = document.getElementById(elIdToRemove);
           clsBtn = document.createElement('button');
           clsBtn.classList.add('clsBtn');
-          clsBtn.textContent = 'X';
+          clsBtn.innerHTML = "<span class=\"material-symbols-outlined\" >close</span>";
           clsBtn.addEventListener('click', /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee25() {
             return _regeneratorRuntime().wrap(function _callee25$(_context25) {
               while (1) switch (_context25.prev = _context25.next) {
                 case 0:
+                  toBeRemoved.innerHTML = '';
                   toBeRemoved.classList.replace('flex', 'hide');
                   document.getElementById('container').classList.toggle('blur');
-                case 2:
+                case 3:
                 case "end":
                   return _context25.stop();
               }
