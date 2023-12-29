@@ -42,25 +42,39 @@ const openClsMenu = async () => {
     document.getElementById('header').appendChild(menuDiv)
     menuDiv.classList.toggle('hide')
     document.querySelector('.menuBtn').addEventListener('click', async () => {
-        menuDiv.classList.toggle('hide')
+        menuDiv.classList.toggle('hide')        
     })
 }
 await openClsMenu()
 
-const handleDecode = async () => {
-    const invoiceDiv = document.getElementById('invoiceDiv')
-    invoiceDiv.classList.toggle('hide')
-    
-
+const handleDecode = async () => {   
     const decodeBtn = document.getElementById('menuItem0')
+    //initialize the invoice as hidden
+    document.getElementById('invoiceDiv').classList.add('hide')   
     decodeBtn.addEventListener('click', async () => {
-        document.querySelector('.menuDiv').classList.toggle('hide')
+        //hide the menu
+        document.querySelector('.menuDiv').classList.add('hide')   
         document.getElementById('container').classList.toggle('blur')
-        console.log('clicked decode')
-        invoiceDiv.classList.replace('hide', 'flex')
-        invoiceDiv.innerHTML = `${await returnInvoiceTxt()}`
-        await appendClsBtn('invoiceDiv')
+        await displayInvoice()
     })
+}
+const displayInvoice = async () => {
+    const containerDiv = document.querySelector('.container')
+    const invoiceDiv = document.getElementById('invoiceDiv')
+
+    containerDiv.classList.add('blur')
+    
+    invoiceDiv.classList.replace('hide', 'flex')
+    invoiceDiv.innerHTML = `${await returnInvoiceTxt()}`
+    //disable inputs and buttons on the blured page
+    const containerEls = document.querySelectorAll('.container button, .container input')
+    containerEls.forEach(element => {
+        element.disabled = containerDiv.classList.contains('blur')
+    })
+    //display invoice div with decoded invoice txt and a close btn
+   
+        
+   await appendClsBtn('invoiceDiv')
 }
 await handleDecode()
 
@@ -76,9 +90,10 @@ const returnInvoiceTxt = async () => {
     //invoice data to txt
     return `<span class="icon-Bitcoin-Lightning-Gray-White-Rounded icon-5x"></span>
     <p>${amount} sats</p> 
-    <p>${invoiceData.description}</p> 
+    <p>Memo: ${invoiceData.description}</p> 
     <p>${dateTimeTxt}</p>
-    <div> ${qrCode}</div>`
+    <button class="cpyBtn" onclick="${await copyToClipBrd(invoice)}">Copy: ${abrvHash(invoice, 8)}</button>
+    <div class="qrDiv"> ${qrCode}</div>`
     
 }
 
@@ -109,7 +124,7 @@ const invoicesTLS = async (invoice) => {
 
 
 // new invoice btn 
-const dispCreatetInvBtn = async () => {    
+const dispCreateInvBtn = async () => {    
     await Promise.all(
         user.wallets.map(async (wallet) => {
             const newInvBtn = document.createElement('button')
@@ -125,16 +140,22 @@ const dispCreatetInvBtn = async () => {
                 const memoInput = document.getElementById('memoInput')
                 const invoice = await wallet.postNewInvoice(amountInput.value, memoInput.value)
                 console.log(invoice.payment_request)
+                await handleDecode()
                 let msg = await copyToClipBrd(invoice.payment_request)
                 
                 await displaySuccessMsg(msg)
+                await displayInvoice()
                 await clearInputs()
+                
+                
             })    
             document.getElementById(`wallet${wallet.wallet_name.substring(0, 3)}`).appendChild(newInvBtn)
+            
         })
     )
 }
-await dispCreatetInvBtn()
+await dispCreateInvBtn()
+
 
 const amountIsValid = async () => {
     const amountInput = document.getElementById('amountInput') 
@@ -155,7 +176,7 @@ const clearInputs = async () => {
     memoInput.value = ''
 }
 const displaySuccessMsg = async (msg) => {
-    const invoiceBtnsDiv = document.getElementById('invoiceBtnsDiv')
+    const invoiceBtnsDiv = document.getElementById('invoiceDiv')
     const msgTxtEl = document.createElement('p')
     msgTxtEl.classList.add('msgTxtEl')
     msgTxtEl.innerHTML = msg
@@ -227,6 +248,10 @@ const appendClsBtn = async (elIdToRemove) => {
         toBeRemoved.innerHTML = ''
         toBeRemoved.classList.replace('flex', 'hide')
         document.getElementById('container').classList.toggle('blur')
+        const containerEls = document.querySelectorAll('.container button, .container input')
+        containerEls.forEach(element => {
+            element.disabled = document.querySelector('.container').classList.contains('blur')
+        })
     })
     toBeRemoved.appendChild(clsBtn)
 

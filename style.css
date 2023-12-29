@@ -172,8 +172,9 @@ button {
 
 .menuDiv {
   max-width: 250px;
-  height: fit-content;
+  height: min-content;
   position: absolute;
+  top: 90px;
   left: 135px;
   background-color:white;
   color: black;
@@ -206,10 +207,13 @@ button {
   outline: none; 
   border: none;
   background-color: #6d6d6d;
+  outline: solid 3px#f2a900de; 
+  margin: 3px;
 }
 .menuItem:hover,
 .menuItem:focus {
   background-color: #f2a900; 
+  outline: solid 5px white; 
   
 }
 .hide {
@@ -220,15 +224,15 @@ button {
 }
 .invoiceDiv {
   background-color: white;
-  width: 500px;
-  height: 800px;
+  width: 600px;
+  height: 1000px;
   position: relative;
-  top: -50%;
+  top: -60%;
   left: 50%;
   transform: translateX(-50%);
   color: black;
   padding: 50px;    
-  
+  box-shadow: 0 8px 20px 0 rgba(0, 0, 0, .9);
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
@@ -236,7 +240,9 @@ button {
   border: solid 10px #6d6d6d;
   outline: solid 15px  #f2a900;
 }
-.invoiceDiv>p {
+.invoiceDiv>p,
+.invoiceDiv> div,
+.invoiceDiv> button {
   padding: 20px;
 }
 .flex {
@@ -244,10 +250,9 @@ button {
 }
 .clsBtn {
   position: relative;
-background-color: white;
+  background-color: white;
   border: none;
-  font-size: 1.5em;
-  
+  font-size: 1.5em;  
   height: 100px;
   padding: 5px;
   border-radius: 50%;
@@ -255,14 +260,29 @@ background-color: white;
   display: flex;
   justify-content: center;
   align-items: center;
-  top: -110%;
+  top: -100%;
   right: -50%;
 }
 .clsBtn>span {
   color: #f2a900;
+  background-color: transparent;
+  
 }
-.clsBtn:hover,
-.clsBtn:hover>span {
+
+.clsBtn>span:focus,
+.clsBtn>span:hover {
   background-color: #f2a900;
   color: white;
+}
+.cpyBtn{
+  height: 150px;
+  padding: 15px;
+  background-color: #6d6d6d;
+  color: white;
+  font-size: 1.1em;
+  box-shadow: 0 8px 20px 0 rgba(0, 0, 0, .5);
+}
+.qrDiv{
+  box-shadow: 0 8px 20px 0 rgba(0, 0, 0, .5);
+  margin: 20px;
 }
