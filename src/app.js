@@ -23,16 +23,15 @@ await initializeUser()
 const displayHeader = async () => {
     const header = document.getElementById('header')
     header.setAttribute('aria-label', 'Total balance')
-    header.innerHTML = `${await user.sumBalances()} 
-    <span class="icon-Bitcoin-Lightning-Gray icon-lg"></span><button class="material-symbols-outlined menuBtn menuIcon">menu</button>`
+    header.innerHTML = `${await user.sumBalances()}`
 }
 await displayHeader()
 
-const openClsMenu = async () => {
+const displayMenuBtns = async () => {
     const menuDiv = document.createElement('div')
     menuDiv.classList.add('menuDiv')
 
-    const menuList = ['Decode', 'New Wallet', 'Cashu']
+    const menuList = ['Decode Invoice', 'New Wallet', 'Cashu']
     for(let i = 0; i < menuList.length; i++) {
         const menuItem = document.createElement('button')
         menuItem.innerText = menuList[i]
@@ -41,12 +40,9 @@ const openClsMenu = async () => {
         menuDiv.appendChild(menuItem)
     }
     document.getElementById('header').appendChild(menuDiv)
-    menuDiv.classList.toggle('hide')
-    document.querySelector('.menuBtn').addEventListener('click', async () => {
-        menuDiv.classList.toggle('hide')        
-    })
+  
 }
-await openClsMenu()
+await displayMenuBtns()
 
 const handleDecode = async () => {   
     const decodeBtn = document.getElementById('menuItem0')
