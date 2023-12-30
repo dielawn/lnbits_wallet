@@ -490,16 +490,19 @@ var initializeUser = /*#__PURE__*/function () {
 await initializeUser();
 var displayHeader = /*#__PURE__*/function () {
   var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
+    var header;
     return _regeneratorRuntime().wrap(function _callee3$(_context3) {
       while (1) switch (_context3.prev = _context3.next) {
         case 0:
+          header = document.getElementById('header');
+          header.setAttribute('aria-label', 'Total balance');
           _context3.t0 = "";
-          _context3.next = 3;
+          _context3.next = 5;
           return user.sumBalances();
-        case 3:
-          _context3.t1 = _context3.sent;
-          document.getElementById('header').innerHTML = _context3.t0.concat.call(_context3.t0, _context3.t1, " \n    <span class=\"icon-Bitcoin-Lightning-Gray icon-lg\"></span><button class=\"material-symbols-outlined menuBtn menuIcon\">menu</button>");
         case 5:
+          _context3.t1 = _context3.sent;
+          header.innerHTML = _context3.t0.concat.call(_context3.t0, _context3.t1, " \n    <span class=\"icon-Bitcoin-Lightning-Gray icon-lg\"></span><button class=\"material-symbols-outlined menuBtn menuIcon\">menu</button>");
+        case 7:
         case "end":
           return _context3.stop();
       }
@@ -557,6 +560,7 @@ var handleDecode = /*#__PURE__*/function () {
       while (1) switch (_context7.prev = _context7.next) {
         case 0:
           decodeBtn = document.getElementById('menuItem0'); //initialize the invoice as hidden
+          decodeBtn.setAttribute('aria-label', 'Decode Invoice');
           document.getElementById('invoiceDiv').classList.add('hide');
           decodeBtn.addEventListener('click', /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6() {
             return _regeneratorRuntime().wrap(function _callee6$(_context6) {
@@ -573,7 +577,7 @@ var handleDecode = /*#__PURE__*/function () {
               }
             }, _callee6);
           })));
-        case 3:
+        case 4:
         case "end":
           return _context7.stop();
       }
@@ -704,7 +708,7 @@ var displayWallets = /*#__PURE__*/function () {
                     walletDiv = document.createElement('div');
                     walletDiv.classList.add('walletDiv');
                     walletDiv.id = "wallet".concat(wallet.wallet_name.substring(0, 3));
-                    walletDiv.innerHTML = "<p>".concat(wallet.wallet_name, ":<br>\n            ").concat(wallet.balance, " sats</p>");
+                    walletDiv.innerHTML = "<p aria-label=\"Wallet name and balance\">".concat(wallet.wallet_name, ":<br>\n            ").concat(wallet.balance, " sats</p>");
                     document.getElementById('walletsDiv').appendChild(walletDiv);
                   case 5:
                   case "end":
@@ -769,6 +773,7 @@ var dispCreateInvBtn = /*#__PURE__*/function () {
                     newInvBtn = document.createElement('button');
                     newInvBtn.classList.add('newInvBtn');
                     newInvBtn.innerHTML = " <span class=\"material-symbols-outlined\">arrow_downward</span>";
+                    newInvBtn.setAttribute('aria-label', 'Create New Invoice');
                     newInvBtn.addEventListener('click', /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee15() {
                       var amount, memoInput, invoice, msg;
                       return _regeneratorRuntime().wrap(function _callee15$(_context15) {
@@ -813,7 +818,7 @@ var dispCreateInvBtn = /*#__PURE__*/function () {
                       }, _callee15);
                     })));
                     document.getElementById("wallet".concat(wallet.wallet_name.substring(0, 3))).appendChild(newInvBtn);
-                  case 5:
+                  case 6:
                   case "end":
                     return _context16.stop();
                 }
@@ -923,6 +928,7 @@ var dispPayInvBtn = /*#__PURE__*/function () {
                     payInvBtn = document.createElement('button');
                     payInvBtn.innerHTML = "<span class=\"material-symbols-outlined\">arrow_upward</span>";
                     payInvBtn.classList.add('payInvBtn');
+                    payInvBtn.setAttribute('aria-label', 'Pay Invoice');
                     payInvBtn.addEventListener('click', /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee21() {
                       var invoice, amount;
                       return _regeneratorRuntime().wrap(function _callee21$(_context21) {
@@ -945,7 +951,7 @@ var dispPayInvBtn = /*#__PURE__*/function () {
                       }, _callee21);
                     })));
                     document.getElementById("wallet".concat(wallet.wallet_name.substring(0, 3))).appendChild(payInvBtn);
-                  case 5:
+                  case 6:
                   case "end":
                     return _context22.stop();
                 }
@@ -1044,9 +1050,9 @@ var displayTxHistory = /*#__PURE__*/function () {
                               dateTime = _context25.sent;
                               //transaction data to txt   
                               txTable = document.createElement('table');
-                              txTable.setAttribute('aria-describedby', 'transaction-history');
+                              txTable.setAttribute('aria-label', 'Transaction');
                               txTable.classList.add('txTxt');
-                              txTable.innerHTML = "<thead>\n                        <tr> <th>".concat(wallet.wallet_name, ":</th> </tr>\n                    </thead>\n                    <tbody>\n                        <tr> <td>").concat(tx.amount / 1000, " sats</td> </tr>\n                        <tr> <td>").concat(tx.fee, " mSats</td> </tr>\n                        <tr> <td>").concat(tx.memo, "</td> </tr>\n                        <tr> <td>").concat(dateTime[1], "</td> </tr>\n                        <tr> <td>").concat(dateTime[0], "</td> </tr>\n                    </tbody>");
+                              txTable.innerHTML = "<thead>\n                        <tr> <th aria-label=\"Wallet name\">".concat(wallet.wallet_name, ":</th> </tr>\n                    </thead>\n                    <tbody>\n                        <tr> <td aria-label=\"Amount\">").concat(tx.amount / 1000, " sats</td> </tr>\n                        <tr> <td aria-label=\"Fee\">").concat(tx.fee, " mSats</td> </tr>\n                        <tr> <td aria-label=\"Memo\">").concat(tx.memo, "</td> </tr>\n                        <tr> <td aria-label=\"Date\">").concat(dateTime[1], "</td> </tr>\n                        <tr> <td aria-label=\"Time\">").concat(dateTime[0], "</td> </tr>\n                    </tbody>");
                               txEl.appendChild(txTable);
                             case 8:
                             case "end":

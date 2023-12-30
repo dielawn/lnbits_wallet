@@ -21,8 +21,9 @@ const initializeUser = async () => {
 await initializeUser()
 
 const displayHeader = async () => {
-    
-    document.getElementById('header').innerHTML = `${await user.sumBalances()} 
+    const header = document.getElementById('header')
+    header.setAttribute('aria-label', 'Total balance')
+    header.innerHTML = `${await user.sumBalances()} 
     <span class="icon-Bitcoin-Lightning-Gray icon-lg"></span><button class="material-symbols-outlined menuBtn menuIcon">menu</button>`
 }
 await displayHeader()
@@ -50,6 +51,7 @@ await openClsMenu()
 const handleDecode = async () => {   
     const decodeBtn = document.getElementById('menuItem0')
     //initialize the invoice as hidden
+    decodeBtn.setAttribute('aria-label', 'Decode Invoice')
     document.getElementById('invoiceDiv').classList.add('hide')   
     decodeBtn.addEventListener('click', async () => {
         //hide the menu
@@ -113,7 +115,7 @@ const displayWallets = async () => {
             const walletDiv = document.createElement('div')
             walletDiv.classList.add('walletDiv')
             walletDiv.id = `wallet${wallet.wallet_name.substring(0, 3)}`
-            walletDiv.innerHTML = `<p>${wallet.wallet_name}:<br>
+            walletDiv.innerHTML = `<p aria-label="Wallet name and balance">${wallet.wallet_name}:<br>
             ${wallet.balance} sats</p>` 
             document.getElementById('walletsDiv').appendChild(walletDiv)
         })
@@ -141,7 +143,7 @@ const dispCreateInvBtn = async () => {
             const newInvBtn = document.createElement('button')
             newInvBtn.classList.add('newInvBtn')
             newInvBtn.innerHTML = ` <span class="material-symbols-outlined">arrow_downward</span>`
-    
+            newInvBtn.setAttribute('aria-label', 'Create New Invoice')
             newInvBtn.addEventListener('click', async () => {
                 console.log('clicked it')
                 const amount = await amountIsValid()    
@@ -203,6 +205,7 @@ const dispPayInvBtn = async () => {
             const payInvBtn = document.createElement('button')
             payInvBtn.innerHTML = `<span class="material-symbols-outlined">arrow_upward</span>`
             payInvBtn.classList.add('payInvBtn')
+            payInvBtn.setAttribute('aria-label', 'Pay Invoice')
             payInvBtn.addEventListener('click', async () => {
                 const invoice = await navigator.clipboard.readText()
                 const amount = await wallet.returnInvoiceAmount(invoice)
@@ -260,18 +263,18 @@ const displayTxHistory = async () => {
                     const dateTime = await handleDateCodes(tx.time)          
                     //transaction data to txt   
                     const txTable = document.createElement('table')
-                    txTable.setAttribute('aria-describedby', 'transaction-history') 
+                    txTable.setAttribute('aria-label', 'Transaction') 
                     txTable.classList.add('txTxt')
                     txTable.innerHTML = 
                     `<thead>
-                        <tr> <th>${wallet.wallet_name}:</th> </tr>
+                        <tr> <th aria-label="Wallet name">${wallet.wallet_name}:</th> </tr>
                     </thead>
                     <tbody>
-                        <tr> <td>${tx.amount / 1000} sats</td> </tr>
-                        <tr> <td>${tx.fee} mSats</td> </tr>
-                        <tr> <td>${tx.memo}</td> </tr>
-                        <tr> <td>${dateTime[1]}</td> </tr>
-                        <tr> <td>${dateTime[0]}</td> </tr>
+                        <tr> <td aria-label="Amount">${tx.amount / 1000} sats</td> </tr>
+                        <tr> <td aria-label="Fee">${tx.fee} mSats</td> </tr>
+                        <tr> <td aria-label="Memo">${tx.memo}</td> </tr>
+                        <tr> <td aria-label="Date">${dateTime[1]}</td> </tr>
+                        <tr> <td aria-label="Time">${dateTime[0]}</td> </tr>
                     </tbody>`        
                     txEl.appendChild(txTable)
                 })
