@@ -99,6 +99,7 @@ button {
 }
 .walletsDiv {
   padding: 10px;
+  
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
@@ -107,6 +108,7 @@ button {
   padding: 10px;
   box-shadow: 0 8px 20px 0 rgba(0, 0, 0, .5);
   max-width: 500px;
+  margin: 20px;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;

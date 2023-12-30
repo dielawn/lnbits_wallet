@@ -53,28 +53,40 @@ export class Wallet {
         }
     }
     //pays invoice
+    // postPayment = async (invoice) => {
+    //     let json = {
+    //         out: true,
+    //         bolt11: invoice,
+    //     } 
+    //     try {
+    //         const amount = await this.returnInvoiceAmount(invoice)
+                     
+    //         // if (!confirm(`Pay ${amount} sats?
+    //         // ${invoice}`)) {
+    //         //     return
+    //         // }
+    //         const response = await postJson(PAYMENTS_URL,  this.admin_key, "application/json", JSON.stringify(json))    
+    //         const paymentHash = response.payment_hash
+    //         console.log(`Payment successful: ${paymentHash}`)
+    //         return paymentHash
+    //     } catch (error) {
+    //         console.error(`Error  ${this.wallet_name}>postPayment: ${error}`)
+    //     }    
+    // }
     postPayment = async (invoice) => {
         let json = {
             out: true,
             bolt11: invoice,
         } 
         try {
-            const amount = await this.returnInvoiceAmount(invoice)
-            if (!confirm(`Pay ${amount} sats?
-            ${invoice}`)) {
-                return
-            }
-            const response = await postJson(PAYMENTS_URL,  this.admin_key, "application/json", JSON.stringify(json))    
-            const paymentHash = response.payment_hash
-            console.log(`Payment successful: ${paymentHash}`)
-            return paymentHash
+                const response = await postJson(PAYMENTS_URL,  this.admin_key, "application/json", JSON.stringify(json))    
+                const paymentHash = response.payment_hash
+                console.log(`Payment successful: ${paymentHash}`)
+                return paymentHash
+                      
         } catch (error) {
             console.error(`Error  ${this.wallet_name}>postPayment: ${error}`)
         }    
-    }
-    customAlert = async (invoice) => {
-       
-
     }
     decodeInvoice = async (invoice) => {
         let json = {

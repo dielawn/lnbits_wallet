@@ -23,7 +23,7 @@ await initializeUser()
 const displayHeader = async () => {
     const header = document.getElementById('header')
     header.setAttribute('aria-label', 'Total balance')
-    header.innerHTML = `${await user.sumBalances()}`
+    header.innerHTML = `${await user.sumBalances()}<span class="icon-Bitcoin-Lightning-Gray-White-Rounded icon-4x"></span>`
 }
 await displayHeader()
 
@@ -50,22 +50,36 @@ const handleDecode = async () => {
     decodeBtn.setAttribute('aria-label', 'Decode Invoice')
     document.getElementById('invoiceDiv').classList.add('hide')   
     decodeBtn.addEventListener('click', async () => {
-        //hide the menu
-        document.querySelector('.menuDiv').classList.add('hide')   
+        //hide the menu  
         document.getElementById('container').classList.toggle('blur')
-        await displayInvoice()
+        await displayInvoice(false)
     })
 }
-const displayInvoice = async () => {
+const displayInvoice = async (isPayment, wallet) => {
     const containerDiv = document.querySelector('.container')
     const invoiceDiv = document.getElementById('invoiceDiv')
 
     containerDiv.classList.add('blur')
+
+    //payment confirm btns
     
+    const confirmBtn = document.createElement('button')
+    confirmBtn.classList.add('cnfrmBtn')
+    confirmBtn.textContent = 'Pay'
+    confirmBtn.addEventListener('click', async () => {
+        const invoice = await navigator.clipboard.readText()
+        await wallet.postPayment(invoice)
+        invoiceDiv.innerHTML = ''
+        invoiceDiv.classList.replace('flex', 'hide')
+        containerDiv.classList.toggle('blur')
+    })
+
     invoiceDiv.classList.replace('hide', 'flex')
     invoiceDiv.innerHTML = `${await returnInvoiceTxt()}`
+   
+    isPayment ?  invoiceDiv.appendChild(confirmBtn) : ''
+  
     await setCopyListener()
-    
     
     //disable inputs and buttons on the blured page
     const containerEls = document.querySelectorAll('.container button, .container input')
@@ -73,7 +87,6 @@ const displayInvoice = async () => {
         element.disabled = containerDiv.classList.contains('blur')
     })
     //display invoice div with decoded invoice txt and a close btn
-   
         
    await appendClsBtn('invoiceDiv')
 }
@@ -153,7 +166,7 @@ const dispCreateInvBtn = async () => {
                 let msg = await copyToClipBrd(invoice.payment_request)
                 
                 await displaySuccessMsg(msg)
-                await displayInvoice()
+                await displayInvoice(false)
                 await clearInputs()
                 
                 
@@ -205,7 +218,8 @@ const dispPayInvBtn = async () => {
             payInvBtn.addEventListener('click', async () => {
                 const invoice = await navigator.clipboard.readText()
                 const amount = await wallet.returnInvoiceAmount(invoice)
-                await wallet.postPayment(invoice)
+                // await wallet.postPayment(invoice)
+                await displayInvoice(true, wallet)
             })
             document.getElementById(`wallet${wallet.wallet_name.substring(0, 3)}`).appendChild(payInvBtn)
         })
