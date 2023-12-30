@@ -5,12 +5,15 @@
 }
 body {
   overflow: hidden;
-  background: linear-gradient(to bottom right, #f2a900, #f2a900a5);
+  background: linear-gradient(to bottom right, #f2a900, #f2a900d4);
   font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   font-size: 25px;
   color: white;
-  height: 100vh;
+
     
+}
+.container{  
+  background: linear-gradient(to bottom right, #f2a900, #f2a900a5);
 }
 .header {
   text-align: center;
@@ -46,6 +49,7 @@ body {
   min-width: 100vw;
   font-size: 20px;
   padding: 50px;
+  max-height: 50px;
 }
 .newInvBtn,
 .payInvBtn {
@@ -70,7 +74,7 @@ button {
 }
 .txEl {
   overflow: auto;
-  height: 40vh;    
+    
   display: flex;
   flex-wrap: nowrap;
   justify-content: flex-start;
@@ -82,7 +86,7 @@ button {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5);
   overflow: hidden;
   min-width: 300px;
-  min-height: 300px;
+  
   margin: 25px;
   display: flex;
   justify-content: center;
@@ -173,7 +177,7 @@ button {
 
 .menuDiv {
   max-width: 250px;
-  height: min-content;
+  
   position: absolute;
   top: 90px;
   left: 105px;
@@ -200,7 +204,7 @@ button {
 }
 .menuItem {
   width: 250px;
-  height: 50px;
+ 
   position: relative;
   color: white;
   font-size: 1.2em;
@@ -226,8 +230,8 @@ button {
 .invoiceDiv {
   background-color: white;
   max-width: 600px;
-  position: relative;
-  top: -60%;
+  position: absolute;
+  top: 100px;
   left: 50%;
   transform: translateX(-50%);
   color: black;
@@ -252,17 +256,14 @@ button {
 .clsBtn {
   position: relative;
   background-color: white;
-  border: none;
-    
-  height: 50px;
+  border: none; 
   width: 50px;
   padding: 5px;
   border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
-  top: -825px;
-  right: -250px;
+  
 }
 .clsBtn>span {
   color: #6d6d6d;
