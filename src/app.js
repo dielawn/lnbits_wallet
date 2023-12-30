@@ -66,6 +66,9 @@ const displayInvoice = async () => {
     
     invoiceDiv.classList.replace('hide', 'flex')
     invoiceDiv.innerHTML = `${await returnInvoiceTxt()}`
+    await setCopyListener()
+    
+    
     //disable inputs and buttons on the blured page
     const containerEls = document.querySelectorAll('.container button, .container input')
     containerEls.forEach(element => {
@@ -91,19 +94,27 @@ const returnInvoiceTxt = async () => {
     return `<span class="icon-Bitcoin-Lightning-Gray-White-Rounded icon-5x"></span>
     <p>${amount} sats</p> 
     <p>Memo: ${invoiceData.description}</p> 
-    <p>${dateTimeTxt}</p>
-    <button class="cpyBtn" onclick="${await copyToClipBrd(invoice)}">Copy: ${abrvHash(invoice, 8)}</button>
-    <div class="qrDiv"> ${qrCode}</div>`
+    <p>${dateTimeTxt[1]}</p>
+    <p>${dateTimeTxt[0]}</p>
+    <button class="cpyBtn">Copy: ${abrvHash(invoice, 8)}</button>    
+    <div class="qrDiv"> ${qrCode}</div>
+    <input id="invoiceInput" class="hide" value="${invoice}">`
     
+}
+const setCopyListener = async () => {
+    document.querySelector('.cpyBtn').addEventListener('click', async () => {
+        await displaySuccessMsg(await copyToClipBrd(document.getElementById('invoiceInput').value))       
+    })
 }
 
 const displayWallets = async () => {
     await Promise.all(
         user.wallets.map(async (wallet) => {
-            const walletDiv = document.createElement('p')
+            const walletDiv = document.createElement('div')
             walletDiv.classList.add('walletDiv')
             walletDiv.id = `wallet${wallet.wallet_name.substring(0, 3)}`
-            walletDiv.innerHTML = `${wallet.wallet_name}:<br>${wallet.balance} sats` 
+            walletDiv.innerHTML = `<p>${wallet.wallet_name}:<br>
+            ${wallet.balance} sats</p>` 
             document.getElementById('walletsDiv').appendChild(walletDiv)
         })
     )
@@ -208,8 +219,35 @@ const handleDateCodes = async (time) => {
     time = time * 1000
     const fmtdTime = new Date(time).toLocaleTimeString()
     const fmtdDate = new Date(time).toLocaleDateString()
-    return `${fmtdTime}<br>${fmtdDate}`
+    return [fmtdDate, fmtdTime]
 }
+
+
+// const displayTxHistory = async () => {
+//     await Promise.all(
+//         user.wallets.map(async (wallet) => {
+//             const txEl = document.createElement('div')
+//             txEl.classList.add('txEl')
+//             const transactions = await wallet.getTxHistory()    
+//             await Promise.all(
+//                 transactions.map(async (tx) => {                       
+//                     const dateTime = await handleDateCodes(tx.time)          
+//                     //transaction data to txt   
+//                     const txTable = document.createElement('div')
+//                     txTable.classList.add('txTable')
+//                     txTable.innerHTML = `<p>${wallet.wallet_name}:<br>
+//                     ${tx.amount / 1000} sats<br>
+//                     Fee: ${tx.fee} mSats<br>
+//                     Memo: ${tx.memo}<br>
+//                     ${dateTime}</p>`        
+//                     txEl.appendChild(txTable)
+//                 })
+//             ) 
+//             document.getElementById(`wallet${wallet.wallet_name.substring(0, 3)}`).appendChild(txEl)
+//         })
+//     )
+// }
+// await displayTxHistory()
 
 const displayTxHistory = async () => {
     await Promise.all(
@@ -221,10 +259,21 @@ const displayTxHistory = async () => {
                 transactions.map(async (tx) => {                       
                     const dateTime = await handleDateCodes(tx.time)          
                     //transaction data to txt   
-                    const txTxt = document.createElement('p')
-                    txTxt.classList.add('txTxt')
-                    txTxt.innerHTML = `${wallet.wallet_name}:<br>${tx.amount / 1000} sats<br>Fee: ${tx.fee} mSats<br>Memo: ${tx.memo}<br>${dateTime}`        
-                    txEl.appendChild(txTxt)
+                    const txTable = document.createElement('table')
+                    txTable.setAttribute('aria-describedby', 'transaction-history') 
+                    txTable.classList.add('txTxt')
+                    txTable.innerHTML = 
+                    `<thead>
+                        <tr> <th>${wallet.wallet_name}:</th> </tr>
+                    </thead>
+                    <tbody>
+                        <tr> <td>${tx.amount / 1000} sats</td> </tr>
+                        <tr> <td>${tx.fee} mSats</td> </tr>
+                        <tr> <td>${tx.memo}</td> </tr>
+                        <tr> <td>${dateTime[1]}</td> </tr>
+                        <tr> <td>${dateTime[0]}</td> </tr>
+                    </tbody>`        
+                    txEl.appendChild(txTable)
                 })
             ) 
             document.getElementById(`wallet${wallet.wallet_name.substring(0, 3)}`).appendChild(txEl)
@@ -232,9 +281,6 @@ const displayTxHistory = async () => {
     )
 }
 await displayTxHistory()
-
-
-
 
     
 //closetBtn for pop ups
@@ -276,7 +322,7 @@ const handlePasteInvoice = async (wallet) => {
 
 //footer
 const displayFooter = async () => {
-    document.getElementById('footer').innerHTML = `Interface by dielawn, Powered by LNBits <br> <span class="icon-Bitcoin-Lightning-White icon-lg"></span>${await user.getBtcUsdPrice()}`
+    document.getElementById('footer').innerHTML = `Interface by dielawn, Powered by LNBits <span class="icon-Bitcoin-Lightning-White icon-lg"></span>${await user.getBtcUsdPrice()}`
 }
 
 //tools 

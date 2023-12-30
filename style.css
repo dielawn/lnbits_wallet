@@ -5,7 +5,7 @@
 }
 body {
   overflow: hidden;
-  background: linear-gradient(to bottom right, #f2a900, #f2a9005e);
+  background: linear-gradient(to bottom right, #f2a900, #f2a900a5);
   font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   font-size: 25px;
   color: white;
@@ -43,14 +43,13 @@ body {
   text-align: center;
   display: flex;
   justify-content: center;
-  width: 100vw;
+  min-width: 100vw;
   font-size: 20px;
   padding: 50px;
 }
 .newInvBtn,
 .payInvBtn {
   padding: 25px;
-  width: 150px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   border: none;
   background-color:  #6d6d6dbf;
@@ -83,7 +82,7 @@ button {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5);
   overflow: hidden;
   min-width: 300px;
-  height: 300px;
+  min-height: 300px;
   margin: 25px;
   display: flex;
   justify-content: center;
@@ -92,16 +91,18 @@ button {
   font-size: .9em;
   color: white;
   text-align: center;
+  flex-direction: column;
 }
 .walletsDiv {
   padding: 10px;
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-around;
 }
 .walletDiv {
   padding: 10px;
   box-shadow: 0 8px 20px 0 rgba(0, 0, 0, .5);
-  width: 34%;
+  max-width: 500px;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
@@ -155,7 +156,7 @@ button {
   cursor: pointer;
   position: absolute;
   top: 75px;
-  left: 75px;
+  left: 50px;
   z-index: 9999;
   font-size: 1.3em;
   font-variation-settings:
@@ -175,7 +176,7 @@ button {
   height: min-content;
   position: absolute;
   top: 90px;
-  left: 135px;
+  left: 105px;
   background-color:white;
   color: black;
   font-size: .5em;
@@ -224,14 +225,13 @@ button {
 }
 .invoiceDiv {
   background-color: white;
-  width: 600px;
-  height: 1000px;
+  max-width: 600px;
   position: relative;
   top: -60%;
   left: 50%;
   transform: translateX(-50%);
   color: black;
-  padding: 50px;    
+  padding: 25px;    
   box-shadow: 0 8px 20px 0 rgba(0, 0, 0, .9);
   flex-direction: column;
   justify-content: space-between;
@@ -239,11 +239,12 @@ button {
   font-size: 1.2em;
   border: solid 10px #6d6d6d;
   outline: solid 15px  #f2a900;
+
 }
 .invoiceDiv>p,
 .invoiceDiv> div,
 .invoiceDiv> button {
-  padding: 20px;
+  padding: 10px;
 }
 .flex {
   display: flex;
@@ -252,21 +253,21 @@ button {
   position: relative;
   background-color: white;
   border: none;
-  font-size: 1.5em;  
-  height: 100px;
+    
+  height: 50px;
+  width: 50px;
   padding: 5px;
   border-radius: 50%;
-  outline:solid 2px #f2a900;
   display: flex;
   justify-content: center;
   align-items: center;
-  top: -100%;
-  right: -50%;
+  top: -825px;
+  right: -250px;
 }
 .clsBtn>span {
-  color: #f2a900;
+  color: #6d6d6d;
   background-color: transparent;
-  
+  font-size: 35px;
 }
 
 .clsBtn>span:focus,
@@ -275,7 +276,6 @@ button {
   color: white;
 }
 .cpyBtn{
-  height: 150px;
   padding: 15px;
   background-color: #6d6d6d;
   color: white;
