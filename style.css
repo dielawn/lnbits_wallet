@@ -5,7 +5,7 @@
 }
 body {
   overflow: hidden;
-  background: linear-gradient(to bottom right, #f2a900, #f2a900d4);
+  
   font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   font-size: 25px;
   color: white;
@@ -13,7 +13,9 @@ body {
     
 }
 .container{  
-  background: linear-gradient(to bottom right, #f2a900, #f2a900a5);
+  background: linear-gradient(to bottom right, black, rgba(47, 47, 47, 0.326));
+  background-color: black;
+  min-height: 100vh;
 }
 .header {
   text-align: center;
@@ -31,10 +33,10 @@ body {
 .amountInput {
   padding: 25px;
   margin: 10px;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 8px 0 rgba(255, 255, 255, 0.538);
   border: none;
   outline: none;
-  background-color: rgba(245, 245, 245, 0.487);
+  background-color: rgba(245, 245, 245, 0.953);
 }
 .memoInput:focus,
 .amountInput:focus {
@@ -84,7 +86,7 @@ button {
 }
 .txTxt {
   padding: 15px;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5);
+  box-shadow: 0 4px 8px 0 rgba(7, 7, 7, 0.781);
   overflow: hidden;
   min-width: 300px;
   
@@ -107,7 +109,7 @@ button {
 }
 .walletDiv {
   padding: 10px;
-  box-shadow: 0 8px 20px 0 rgba(0, 0, 0, .5);
+  box-shadow: 0 4px 8px 0 rgba(249, 248, 248, 0.344);
   max-width: 500px;
   margin: 20px;
   display: flex;
@@ -139,9 +141,7 @@ button {
 ::-webkit-scrollbar-thumb:hover {
     background:#c68b01;
   }
-.icon {
-    fill: white;
-}
+
 .material-symbols-outlined {
   color: white;
   font-variation-settings:
@@ -156,31 +156,10 @@ button {
   text-align: center;
     
   }
-.menuIcon {
-  outline: none;
-  border: none;
-  background-color: transparent;
-  cursor: pointer;
-  position: absolute;
-  top: 75px;
-  left: 50px;
-  z-index: 9999;
-  font-size: 1.3em;
-  font-variation-settings:
-  'FILL' 0,
-  'wght' 400,
-  'GRAD' 0,
-  'opsz' 24
-  }
-  .menuIcon:focus,
-  .menuIcon:hover {
-  color: #f2a900; 
-  background-color: white;
-  }
 
 .menuDiv {
-  max-width: 250px;
-  
+  max-width: 265px;
+  padding: 5px;
   position: absolute;
   top: 90px;
   left: 105px;
@@ -215,13 +194,13 @@ button {
   outline: none; 
   border: none;
   background-color: #6d6d6d;
-  outline: solid 3px#f2a900de; 
+  outline: solid 3px rgba(0, 0, 0, 0.183); 
   margin: 3px;
 }
 .menuItem:hover,
 .menuItem:focus {
   background-color: #f2a900; 
-  outline: solid 5px white; 
+  
   
 }
 .hide {
