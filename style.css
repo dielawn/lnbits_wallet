@@ -54,6 +54,7 @@ body {
 .newInvBtn,
 .payInvBtn {
   padding: 25px;
+  max-height: 75px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   border: none;
   background-color:  #6d6d6dbf;
@@ -231,26 +232,26 @@ button {
 }
 .invoiceDiv {
   background-color: white;
-  max-width: 600px;
   position: absolute;
   top: 100px;
   left: 50%;
   transform: translateX(-50%);
   color: black;
-  padding: 25px;    
+  padding: 55px;   
   box-shadow: 0 8px 20px 0 rgba(0, 0, 0, .9);
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
   font-size: 1.2em;
-  border: solid 10px #6d6d6d;
-  outline: solid 15px  #f2a900;
+  border: solid 5px #6d6d6d;
+  outline: solid 10px  #f2a900;
 
 }
 .invoiceDiv>p,
 .invoiceDiv> div,
 .invoiceDiv> button {
   padding: 10px;
+  margin: 10px 100px 10px 100px;
 }
 .flex {
   display: flex;
@@ -261,6 +262,7 @@ button {
   border: none; 
   width: 50px;
   padding: 5px;
+  margin: 25px;
   border-radius: 50%;
   display: flex;
   justify-content: center;
@@ -278,6 +280,7 @@ button {
   background-color: #f2a900;
   color: white;
 }
+.cnfrmBtn,
 .cpyBtn{
   padding: 15px;
   background-color: #6d6d6d;

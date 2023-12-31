@@ -72,6 +72,8 @@ const displayInvoice = async (isPayment, wallet) => {
         invoiceDiv.innerHTML = ''
         invoiceDiv.classList.replace('flex', 'hide')
         containerDiv.classList.toggle('blur')
+        //disable inputs and buttons on the blured page
+        await disableBackground()
     })
 
     invoiceDiv.classList.replace('hide', 'flex')
@@ -82,15 +84,20 @@ const displayInvoice = async (isPayment, wallet) => {
     await setCopyListener()
     
     //disable inputs and buttons on the blured page
-    const containerEls = document.querySelectorAll('.container button, .container input')
-    containerEls.forEach(element => {
-        element.disabled = containerDiv.classList.contains('blur')
-    })
+    await disableBackground()
     //display invoice div with decoded invoice txt and a close btn
         
    await appendClsBtn('invoiceDiv')
 }
 await handleDecode()
+
+const disableBackground = async () => {
+    //disable inputs and buttons on the blured page
+    const containerEls = document.querySelectorAll('.container button, .container input')
+    containerEls.forEach(element => {
+        element.disabled = document.getElementById('container').classList.contains('blur')
+    })
+}
 
 const returnInvoiceTxt = async () => {
     //invoice data
@@ -307,10 +314,7 @@ const appendClsBtn = async (elIdToRemove) => {
         toBeRemoved.innerHTML = ''
         toBeRemoved.classList.replace('flex', 'hide')
         document.getElementById('container').classList.toggle('blur')
-        const containerEls = document.querySelectorAll('.container button, .container input')
-        containerEls.forEach(element => {
-            element.disabled = document.querySelector('.container').classList.contains('blur')
-        })
+        await disableBackground()
     })
     toBeRemoved.appendChild(clsBtn)
 
